@@ -24,16 +24,18 @@ Capsule.prototype.evo = function(dt) {
 	var p = this.p
 	p.t = p.t + dt
 	p.x = this.x + p.vx * p.t
-	p.y = this.y + p.vy * p.t + 4.6 * p.t * p.t
+	p.y = this.y + p.vy * p.t + env.tuning.G * p.t * p.t
 	if(p.y > 0) {
 		this.ground({
-			x: p.x
+			x: p.x,
 			y: p.y = 0
 		})
 		this.x = p.x
 		this.y = p.y
 		p.vx = 0
 		p.vy = 0
+        // remove the capsule
+        this.__.detach(this)
 	}
 }
 

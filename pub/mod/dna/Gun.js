@@ -1,6 +1,8 @@
 let mv = []
 
 let BARREL = 50
+let MIN_AIM = Math.PI + 0.4
+let MAX_AIM = 2*Math.PI - 0.4
 let TURN = 2
 
 let Gun = function(st) {
@@ -53,14 +55,15 @@ Gun.prototype.prev = function(dir) {
 
 Gun.prototype.evo = function(dt) {
     if (mv[1]) {
-        this.aim -= TURN * dt
+        this.aim = lib.math.limitMin(lib.math.normalizeAngle(this.aim - TURN * dt), MIN_AIM)
     }
     if (mv[2]) {
-        this.aim += TURN * dt
+        this.aim = lib.math.limitMax(lib.math.normalizeAngle(this.aim + TURN * dt), MAX_AIM)
     }
     if (mv[3]) {
         this.power += this.recharge * dt
     }
+    env.status = this.aim
 }
 
 Gun.prototype.draw = function() {
