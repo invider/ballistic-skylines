@@ -14,8 +14,10 @@ let Capsule = function(st) {
     }
 }
 
-Capsule.prototype.ground = function(x, y) {
-	// TODO: hit ground
+Capsule.prototype.ground = function(p) {
+	sys.spawn('Building', {
+		p: p
+	}, 'camera')
 }
 
 Capsule.prototype.evo = function(dt) {
@@ -24,7 +26,10 @@ Capsule.prototype.evo = function(dt) {
 	p.x = this.x + p.vx * p.t
 	p.y = this.y + p.vy * p.t + 4.6 * p.t * p.t
 	if(p.y > 0) {
-		this.ground(p.x, p.y = 0)
+		this.ground({
+			x: p.x
+			y: p.y = 0
+		})
 		this.x = p.x
 		this.y = p.y
 		p.vx = 0
