@@ -1,5 +1,7 @@
 let Capsule = function(st) {
     sys.augment(this, st)
+
+    this.collidable = true
 }
 
 Capsule.prototype.evo = function(dt) {
