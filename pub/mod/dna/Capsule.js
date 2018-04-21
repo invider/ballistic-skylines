@@ -24,7 +24,7 @@ Capsule.prototype.evo = function(dt) {
 	p.x = this.x + p.vx * p.t
 	p.y = this.y + p.vy * p.t + 4.6 * p.t * p.t
 	if(p.y > 0) {
-		this.ground(p.x, 0)
+		this.ground(p.x, p.y = 0)
 	}
 }
 
