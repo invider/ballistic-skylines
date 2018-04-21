@@ -3,7 +3,7 @@
 rm -f pub/topology
 rm -f pub/**/topology
 
-rm -f man/*pdf
+rm -fr pub/man
 
 rm -f *.zip
 rm -f *.tgz
