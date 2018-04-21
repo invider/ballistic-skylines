@@ -1,0 +1,26 @@
+<html>
+    <body>
+        <script src='/jam/fix.js'></script>
+        <script>
+            // declare an entity in the lab
+            this['@lab/hello'] = {
+
+                // this function draws the entity
+                draw: function() {
+                    let ctx = this._.ctx
+                    if (!ctx) console.log('no context!')
+
+                    // fill background
+                    ctx.fillStyle = "#220044"
+                    ctx.fillRect(0, 0, ctx.width, ctx.height)
+
+                    // show text
+                    ctx.fillStyle = "#FFFF00"
+                    ctx.font="32px Impact"; 
+                    ctx.textAlign = "center"
+                    ctx.fillText('Hello Collider JAM!', ctx.width/2, ctx.height/2)
+                }
+            }
+        </script>
+    </body>
+</html>

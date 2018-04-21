@@ -1,0 +1,9 @@
+#!/bin/sh
+
+./gen
+
+tar cfzv pub.tar.gz --exclude='*.ml' --exclude='.DS_Store' ./pub
+
+du -sh *.tar
+echo 'tar is generated'
+

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+rm -f pub/topology
+rm -f pub/**/topology
+
+rm -f man/*pdf
+
+rm -f *.zip
+rm -f *.tgz
+rm -f *.tar.gz
+

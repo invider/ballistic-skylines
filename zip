@@ -1,0 +1,35 @@
+#!/bin/sh
+
+./gen
+
+if [ -z "$1" ]; then
+
+    rm -f *.zip
+    cd pub
+    zip -v -r pub.zip . -x ".git*" -x ".DS_Store" -x ".ml"
+    mv ./pub.zip ../
+    cd ..
+
+else
+    echo ''
+    echo '========================================'
+    echo 'generating for $'$1
+
+    # assemble
+    rm -rf zip.tmp
+    mkdir zip.tmp
+    cp -R pub/fix ./zip.tmp
+    cp -R pub/$1* ./zip.tmp
+    cp pub/topology ./zip.tmp
+
+    # generate zip and remove artifacts
+    cd zip.tmp
+    zip -v -r $1.zip . -x ".git*" -x ".DS_Store" -x ".ml"
+    mv ./$1.zip ../
+    cd ..
+    rm -rf zip.tmp
+fi
+
+du -sh *.zip
+echo 'zip is generated!'
+

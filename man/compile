@@ -1,0 +1,39 @@
+#!/bin/sh
+
+rm -rf ../pub/man
+mkdir ../pub/man
+cp -r ./res ../pub/man/
+
+markdown -h tutorial.md | grep -v 'page-break-after' > tutorial-body.html
+cat res/header.html tutorial-body.html res/footer.html > tutorial.html
+rm -f tutorial-body.html
+
+# try to use md2pdf
+if [ -x "$(command -v md2pdf)" ]; then
+    md2pdf *.md
+else
+    echo 'md2pdf is not found!'
+fi
+
+# try to use pandoc
+if [ ! -f tutorial.pdf ]; then
+    if [ -x "$(command -v pandoc)" ]; then
+        pandoc -V papersize:a4paper --toc -o tutorial.pdf tutorial.md
+        #pandoc -V title:'Collider JAM Tutorial' --toc -o tutorial.epub tutorial.md
+    else
+        echo 'pandoc is not found!'
+    fi
+fi
+
+if [ ! -f tutorial.pdf ]; then
+    # try to use wkhtmltopdf
+    if [ -x "$(command -v wkhtmltopdf)" ]; then
+        wkhtmltopdf -s A5 --zoom 7 tutorial.html tutorial.pdf
+    else
+        echo 'wkhtmltopdf is not found!'
+    fi
+fi
+
+mv -f *.html ../pub/man
+mv -f *.pdf ../pub/man
+

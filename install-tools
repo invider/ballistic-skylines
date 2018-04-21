@@ -1,0 +1,19 @@
+#!/bin/sh
+
+npm update
+sudo npm install -g md2pdf
+sudo npm install -g markdown-to-html
+sudo npm install -g html-pdf
+sudo npm install -g md2html
+
+if [[ $(uname -s) == 'Darwin' ]]; then
+    echo 'MacOS X'
+    brew update
+    brew install Caskroom/cask/wkhtmltopdf
+    brew install pandoc
+    brew install ghc cabal-install
+    cabal install pandoc
+    brew cask install mactex
+fi
+
+

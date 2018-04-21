@@ -1,0 +1,3 @@
+This mod demonstrates many aspects
+of placing and manipulating
+the Collider JAM scenegraph
