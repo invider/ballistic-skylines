@@ -7,7 +7,7 @@ let Capsule = function(st) {
     this.color = this.color || '#700090'
     this.p = {
     	vx: this.v * lib.math.vecX(this.a),
-    	vy: -this.v * lib.math.vecY(this.a),
+    	vy: this.v * lib.math.vecY(this.a),
     	x: this.x,
     	y: this.y,
     	t: 0
