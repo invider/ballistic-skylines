@@ -22,7 +22,7 @@ module.exports = function() {
         color: '#ff7080',
         top: 1000,
         step: 100,
-        coordinates: false,
+        coordinates: true,
     }, 'camera')
 
     // spawn camera + marks
