@@ -2,8 +2,8 @@ let Capsule = function(st) {
     sys.augment(this, st)
 
     this.collidable = true
-    this.w = this.w || 1
-    this.h = this.h || 1
+    this.w = this.w || 10
+    this.h = this.h || 10
     this.color = this.color || '#700090'
     this.p = {
     	vx: this.v * lib.math.vecX(this.a),
@@ -25,6 +25,10 @@ Capsule.prototype.evo = function(dt) {
 	p.y = this.y + p.vy * p.t + 4.6 * p.t * p.t
 	if(p.y > 0) {
 		this.ground(p.x, p.y = 0)
+		this.x = p.x
+		this.y = p.y
+		p.vx = 0
+		p.vy = 0
 	}
 }
 
