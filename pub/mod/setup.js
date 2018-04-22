@@ -16,7 +16,7 @@ module.exports = function() {
 
     // spawn a gun under the camera
     sys.spawn('Gun', {
-        Z: 1000,
+        Z: 1000000,
         x: 0,
         y: -16,
     }, 'camera')

@@ -3,8 +3,8 @@ let Meteor = function() {
     this.h = 16
 
     let hitX = env.worldStart + (lib.math.rndf() * (env.worldEnd - env.worldStart))
-    this.dx = -100 - lib.math.rndi(600)
-    this.dy = 800 + lib.math.rndi(600)
+    this.dx = -env.tuning.meteorSpeedX - lib.math.rndi(env.tuning.meteorSpeedVX)
+    this.dy = env.tuning.meteorSpeedY - lib.math.rndi(env.tuning.meteorSpeedVY)
 
     this.x = -this.dx * 5 + hitX
     this.y = -this.dy * 5

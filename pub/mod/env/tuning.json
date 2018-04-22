@@ -5,6 +5,10 @@
     "initialRechargeSpeed": 75,
     "maxSectionShift": 0.2,
     "meteorProbability": 0.1,
+    "meteorSpeedY": 800,
+    "meteorSpeedVY": 600,
+    "meteorSpeedX": 200,
+    "meteorSpeedVX": 800,
 	"vehicle": {
 	    "t1": 3,
 	    "t2": 10,
@@ -12,7 +16,8 @@
 		"y2": 0.2,
 		"v1": 30,
 		"v2": 150,
-        "w1": 20,
-        "w2": 120
-	}
+        "s1": 1,
+        "s2": 3
+	},
+    "sectionPopulation": 200
 }

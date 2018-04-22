@@ -37,16 +37,18 @@ module.exports = function(st) {
 	}
 
 	return {
-		Z : 0,
+		Z : Math.round(st.scale * env.maxBuildingZ) || 1000,
 		evo : evos[lib.math.rndi(evos.length)](p),
 		draw : function() {
-			let w = st.w || 30
-			let h = st.h || 21
+            let img = res.car[type]
+			let w = img.width * st.scale
+			let h = img.height * st.scale
+
 			ctx.save()
 			ctx.translate(p.x, p.y)
             ctx.imageSmoothingEnabled = false
             ctx.scale(dx, 1);
-            ctx.drawImage(res.car[type], -w/2, -h/2, w, h)
+            ctx.drawImage(img, -w/2, -h/2, w, h)
 			ctx.restore()
 		}
 	}

@@ -1,5 +1,10 @@
+
+let Z = 1000
+
 let Building = function(st) {
-    this.Z = 100
+    this.Z = Z++
+    env.maxBuildingZ = Z
+
     sys.augment(this, st)
 
     this.w = this.w || 64
