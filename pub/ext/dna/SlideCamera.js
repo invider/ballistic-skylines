@@ -9,7 +9,7 @@ let SlideCamera = function(dat) {
     sys.Frame.call(this, dat)
 }
 
-SlideCamera.prototype = new sys.Frame()
+SlideCamera.prototype = new sys.LabFrame()
 
 SlideCamera.prototype.worldX = function(x) {
     return (x-ctx.width/2)/this.scale + this.x

@@ -24,16 +24,17 @@ Capsule.prototype.ground = function(x) {
     if (building) {
         // grow existing
         log.out('growing')
-        building.floor ++
+        building.build()
     } else {
         // build new building
         log.out('net building')
-        sys.spawn('Building', {
+        building = sys.spawn('Building', {
             p: {
                 x: x,
                 y: 0,
             }
         }, 'camera')
+        building.build()
     }
 }
 

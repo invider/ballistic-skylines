@@ -13,10 +13,13 @@ module.exports = function() {
 
     // spawn a gun under the camera
     sys.spawn('Gun', {
+        Z: 1000,
         x: 0,
         y: -16,
     }, 'camera')
+    lab.gun = lab.camera.gun
 
+    /*
     // spawn world coordinate grid
     sys.spawn('Grid', {
         color: '#ff7080',
@@ -35,4 +38,5 @@ module.exports = function() {
         step: ctx.width/7,
         style: 'target',
     })
+    */
 }

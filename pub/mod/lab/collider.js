@@ -1,7 +1,7 @@
 
 module.exports = {
+    /*
     evo: function(dt) {
-        /*
         // go over all entities under the camera
         // and test for collisions
         lab.camera.collide(function(s, t) {
@@ -18,6 +18,6 @@ module.exports = {
             return (!!s.collidable)
         }
         )
-        */
     }
+    */
 }

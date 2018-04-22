@@ -408,9 +408,81 @@ Frame.prototype.selectOneNumber = function(predicate) {
 }
 
 Frame.prototype.kill = function() {
-    this._ls.map(function(node) {
+    this._ls.forEach(node => {
         if (isFun(node.kill)) node.kill()
     })
+}
+
+let LabFrame = function(st) {
+    Frame.call(this, st)
+}
+LabFrame.prototype = new Frame()
+
+LabFrame.prototype.touch = function(path) {
+    if (path === undefined || path === '') return this
+    if (this._locked) throw new Error("can't touch - node is locked")
+
+    // normalize path
+    if (path.startsWith('@')) path = path.substring(1)
+    if (path.startsWith('/')) path = path.substring(1)
+
+    let i = path.indexOf('/')
+    if (i >= 0) {
+        // switch to the next target
+        let nextName = path.substring(0, i)
+        let nextPath = path.substring(i + 1)
+        let nextNode = this[nextName]
+        if (!nextNode) {
+            // provide a new one
+            return this.attach(new LabFrame(nextName)).touch(nextPath)
+        }
+    } else {
+        // we got the name
+        return this.attach(new LabFrame(path))
+    }
+}
+LabFrame.prototype.onAttached = function(node) {
+    //this._.log.sys('spawned ' + node.name)
+    // normalize and augment the node
+    node.alive = true
+    if (!isFun(node.draw)) node.draw = false // ghost
+    if (!isFun(node.evo)) node.evo = false   // prop
+    if (isFun(node.spawn)) node.spawn() // spawn handler
+    if (isNumber(node.x) && isNumber(node.y)) node._positional = true
+    else node._positional = false
+    if (node._positional
+            && isNumber(node.w)
+            && isNumber(node.h)) {
+        node._sizable = true
+    } else {
+        node.sizable = false
+    }
+
+    // TODO make arbitrary augmentation and dependency injection possible
+    //this._.aug._ls.forEach( function(aug) {
+    //    aug(node)
+    //})
+
+    if (isNumber(node.Z)) {
+        // sort by Z
+        node.__._ls.sort((a, b) => {
+            if (!isNumber(a.Z) && !isNumber(b.Z)) return 0;
+            if (!isNumber(a.Z) && isNumber(b.Z)) return 1;
+            if (isNumber(a.Z) && !isNumber(b.Z)) return -1;
+            if (a.Z > b.Z) return 1;
+            if (a.Z < b.Z) return -1;
+            return 0;
+        })
+    }
+},
+
+LabFrame.prototype.draw = function() {
+    for (let i = 0; i < this._ls.length; i++) {
+        let e = this._ls[i]
+        if (e.draw && !e.dead && !e.hidden) {
+            e.draw()
+        }
+    }
 }
 
 // Mod context container
@@ -597,22 +669,11 @@ var Mod = function(initObj) {
 
 
     // prototypes/constructors
-    this.attach(new Frame({
-        name: 'dna',
-    }))
+    this.attach(new Frame(), 'dna')
 
     // augment functions
     // TODO remove in favor of .aug
-    this.attach(new Frame({
-        name: "aug",
-    }))
-
-    /*
-    // setup procedures
-    this.attach(new Frame({
-        name: "setup",
-    }))
-    */
+    this.attach(new Frame(), 'aug')
 
     // static environment data entities
     this.attach(new Frame({
@@ -620,51 +681,7 @@ var Mod = function(initObj) {
         started: false,
     }))
     // container for acting entities - actors, ghosts, props
-    this.attach(new Frame({
-        name: 'lab',
-        onAttached: function(node) {
-            //this._.log.sys('spawned ' + node.name)
-            // normalize and augment the node
-            node.alive = true
-            if (!isFun(node.draw)) node.draw = false // ghost
-            if (!isFun(node.evo)) node.evo = false   // prop
-            if (isFun(node.spawn)) node.spawn() // spawn handler
-            if (isNumber(node.x) && isNumber(node.y)) node._positional = true
-            else node._positional = false
-            if (node._positional
-                    && isNumber(node.w)
-                    && isNumber(node.h)) {
-                node._sizable = true
-            } else {
-                node.sizable = false
-            }
-
-            // TODO make arbitrary augmentation and dependency injection possible
-            //this._.aug._ls.forEach( function(aug) {
-            //    aug(node)
-            //})
-
-            if (isNumber(node.Z)) {
-                // sort by Z
-                node.__._ls.sort((a, b) => {
-                    if (!isNumber(a.Z) && !isNumber(b.Z)) return 0;
-                    if (!isNumber(a.Z) && isNumber(b.Z)) return 1;
-                    if (isNumber(a.Z) && !isNumber(b.Z)) return -1;
-                    if (a.Z > b.Z) return 1;
-                    if (a.Z < b.Z) return -1;
-                    return 0;
-                })
-            }
-        },
-        draw: function() {
-            for (let i = 0; i < this._ls.length; i++) {
-                let e = this._ls[i]
-                if (e.draw && !e.dead && !e.hidden) {
-                    e.draw()
-                }
-            }
-        },
-    }))
+    this.attach(new LabFrame(), 'lab')
 
     // container for mods
     var mod = function mod(path, name) {
@@ -1394,6 +1411,7 @@ _scene.sys.attach(before)
 _scene.sys.attach(after)
 
 _scene.sys.attach(Frame)
+_scene.sys.attach(LabFrame)
 
 _scene.sys.attach(isObj)
 _scene.sys.attach(isFun)

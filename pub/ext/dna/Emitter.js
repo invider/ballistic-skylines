@@ -56,7 +56,8 @@ Emitter.prototype.moveParticle = function(dt) {
 Emitter.prototype.drawParticle = function() {
     if (this.img) {
         ctx.globalAlpha = 0.5
-        ctx.drawImage(this.img, this.x-this.r/2, this.y-this.r/2, this.r, this.r);
+        ctx.imageSmoothingEnabled = true
+        ctx.drawImage(this.img, this.x-this.r, this.y-this.r, this.r*2, this.r*2);
     } else {
         ctx.beginPath();
         if (this.lifespan < FADEOUT) {
