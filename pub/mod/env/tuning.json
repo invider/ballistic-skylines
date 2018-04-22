@@ -1,3 +1,6 @@
 {
-    "G": 4.6
+    "G": 4.6,
+    "minCharge": 20,
+    "initialMaxCharge": 100,
+    "initialRechargeSpeed": 100
 }
