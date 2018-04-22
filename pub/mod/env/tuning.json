@@ -5,11 +5,11 @@
 	"initialRechargeSpeed": 75,
 	"maxSectionShift": 0.2,
 	"vehicle": {
-	    "freq1": 1,
-	    "freq2": 4,
-		"y1": 0.25,
-		"y2": 0.75,
-		"v1": 10,
-		"v2": 20
+	    "t1": 3,
+	    "t2": 10,
+		"y1": 0.5,
+		"y2": 0.2,
+		"v1": 30,
+		"v2": 150
 	}
 }
