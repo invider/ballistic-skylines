@@ -1,7 +1,15 @@
 {
-    "gravity": 8,
-    "minCharge": 30,
-    "initialMaxCharge": 150,
-    "initialRechargeSpeed": 75,
-    "maxSectionShift": 0.2
+	"gravity": 8,
+	"minCharge": 30,
+	"initialMaxCharge": 150,
+	"initialRechargeSpeed": 75,
+	"maxSectionShift": 0.2,
+	"vehicle": {
+	    "freq1": 1,
+	    "freq2": 4,
+		"y1": 0.25,
+		"y2": 0.75,
+		"v1": 10,
+		"v2": 20
+	}
 }
