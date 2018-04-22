@@ -6,6 +6,7 @@ let Building = function(st) {
     this.color = this.color || '#700090' 
     this.floor = 0
     this.fh = 32
+    this.section = []
 }
 
 Building.prototype.test = function(x) {
@@ -13,7 +14,7 @@ Building.prototype.test = function(x) {
 }
 
 Building.prototype.build = function() {
-    this.floor ++
+    this.section[this.floor++] = lib.math.rndi(3)
     sys.spawn('Emitter', {
             x: this.p.x,
             y: this.p.y,
@@ -67,7 +68,7 @@ Building.prototype.draw = function() {
 
     let by = -this.fh
     for (let i = 0; i < this.floor; i++) {
-        ctx.drawImage(res.section[2], -this.w/2, by, this.w, this.fh)
+        ctx.drawImage(res.section[this.section[i]], -this.w/2, by, this.w, this.fh)
         by -= this.fh
     }
 
