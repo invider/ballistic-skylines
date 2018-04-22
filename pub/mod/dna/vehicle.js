@@ -24,13 +24,13 @@ module.exports = function(st) {
 	let config = env.tuning.vehicle
 
 	let dx = lib.math.rnds()
-	let x0 = lab.camera.x - 0.55 * dx * ctx.width
+	let x0 = lab.camera.worldX(ctx.width*(1-dx)*0.5)
 	let p = {
 		x : x0,
 		y : -ctx.height * lib.math.linear(config.y1, config.y2, lib.math.rndf()),
 		vx : dx * lib.math.linear(config.v1, config.v2, lib.math.rndf()),
 		distant: function() {
-			let xn = lab.camera.x + dx * ctx.width
+			let xn = lab.camera.worldX(ctx.width*(0.5+dx))
 			return (this.x-x0)*(this.x-xn)>0
 		}
 	}
