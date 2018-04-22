@@ -1,8 +1,9 @@
 module.exports = function() {
     log.out('setting up the scene')
 
-    env.worldStart = -1000
-    env.worldEnd = 1000
+    env.worldStart = -1500
+    env.worldEnd = 1500
+    sys.augment(env, env.tuning)
 
     // spawn camera
     sys.spawn('SlideCamera', {
@@ -20,6 +21,13 @@ module.exports = function() {
         Z: 1000000,
         x: 0,
         y: -16,
+    }, 'camera')
+    lab.gun = lab.camera.gun
+
+    // spawn a scoop
+    sys.spawn('Scoop', {
+        x: -300,
+        y: -6,
     }, 'camera')
     lab.gun = lab.camera.gun
 

@@ -10,35 +10,54 @@ let Meteor = function() {
     this.y = -this.dy * 5
 }
 
+Meteor.prototype.ground = function() {
+    sys.spawn('Emitter', {
+            x: this.x,
+            y: 0,
+            img: res.dustParticle,
+            lifespan: 0.2,
+            force: 150,
+            size: 30, vsize: 20,
+            speed: 50, vspeed: 0,
+            angle: Math.PI,
+            spread: Math.PI,
+            minLifespan: 0.5,
+            vLifespan: 0.3,
+    }, 'camera')
+    lib.sfx(res.sfx.explosion[1], 1)
+
+    let x = this.x
+    lab.camera._ls.forEach(e => {
+        if (e instanceof dna.Building && e.test(x)) {
+            e.demolish()
+        } else if (e instanceof dna.Scoop && e.test(x, this.w)) {
+            let ore = Math.round(lib.math.linear(env.meteorMinOre, env.meteorMaxOre, lib.math.rndf()))
+            lab.score.addOre(ore)
+            sys.spawn('text/fadeText', {
+                font: '24px zekton',
+                fillStyle: '#f04000',
+                x: lab.camera.screenX(this.x),
+                y: lab.camera.screenY(this.y) - 50,
+                text: '+' + ore + ' Ore',
+                dx: 20,
+                dy: -30,
+                ttl: 5,
+                tti: 0,
+                ttf: 2,
+            })
+        } else if (e instanceof dna.Gun && x > e.x-e.w && x < e.x+e.w) {
+            env.ore = Math.floor(env.ore/2)
+        }
+    })
+
+    this.__.detach(this)
+}
+
 Meteor.prototype.evo = function(dt) {
     this.x += this.dx * dt
     this.y += this.dy * dt
 
-    if (this.y > 0) {
-        sys.spawn('Emitter', {
-                x: this.x,
-                y: 0,
-                img: res.dustParticle,
-                lifespan: 0.2,
-                force: 150,
-                size: 30, vsize: 20,
-                speed: 50, vspeed: 0,
-                angle: Math.PI,
-                spread: Math.PI,
-                minLifespan: 0.5,
-                vLifespan: 0.3,
-        }, 'camera')
-        lib.sfx(res.sfx.explosion[1], 1)
-
-        let x = this.x
-        lab.camera._ls.forEach(e => {
-            if (e instanceof dna.Building && e.test(x)) {
-                e.demolish()
-            }
-        })
-
-        this.__.detach(this)
-    }
+    if (this.y > 0) this.ground()
 }
 
 Meteor.prototype.draw = function(dt) {

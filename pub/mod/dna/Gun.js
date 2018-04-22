@@ -22,6 +22,10 @@ let Gun = function(st) {
 				return types[index]
 			},
 			
+            base: function() {
+                index = 0
+            },
+
 			prev: function() {
 				index = (index == 0 ? types.length : index) - 1
 			},
@@ -64,7 +68,7 @@ Gun.prototype.fire = function() {
     mv[3] = false
     mv[4] = false
 
-    if (this.charge > env.tuning.minCharge) {
+    if (this.charge > env.tuning.minCharge && env.ore >= this.capsuleType.value().ore) {
         // shoot capsule
         let bx = lib.math.vecX(this.aim) * (BARREL+CAPSULE_SHIFT)
         let by = lib.math.vecY(this.aim) * (BARREL+CAPSULE_SHIFT)
@@ -77,6 +81,7 @@ Gun.prototype.fire = function() {
             w: 10,
             h: 10,
         }, 'camera')
+        env.ore -= this.capsuleType.value().ore
 
         // puff
         sys.spawn('Emitter', {
@@ -179,6 +184,56 @@ Gun.prototype.draw = function() {
     ctx.drawImage(res.gun, -this.w/2, -this.h/2 - 2, this.w, this.h)
 
     ctx.restore()
+}
+
+Gun.prototype.teleport = function() {
+    sys.spawn('Emitter', {
+            x: this.x,
+            y: this.y,
+            color: '#5080FF',
+            lifespan: 1.5,
+            force: 500, // particles/second
+            size: 8, vsize: 4,
+            speed: 80, vspeed: 10,
+            angle: Math.PI,
+            spread: Math.PI,
+            minLifespan: 0.8,
+            vLifespan: 0.2,
+            drawParticle: function() {
+                if (this.lifespan < 0.5) {
+                    ctx.globalAlpha = this.lifespan/0.5
+                } else {
+                    ctx.globalAlpha = 1
+                }
+                ctx.fillStyle = this.color
+                ctx.fillRect(this.x, this.y, this.r, this.r)
+            },
+    }, 'camera')
+}
+
+Gun.prototype.emplode = function() {
+    sys.spawn('Emitter', {
+            x: this.x,
+            y: this.y,
+            color: '#FFFF80',
+            lifespan: 1.2,
+            force: 400,
+            size: 6, vsize: 4,
+            speed: 50, vspeed: 40,
+            angle: Math.PI,
+            spread: Math.PI,
+            minLifespan: 0.5,
+            vLifespan: 0.2,
+            drawParticle: function() {
+                if (this.lifespan < 0.5) {
+                    ctx.globalAlpha = this.lifespan/0.5
+                } else {
+                    ctx.globalAlpha = 1
+                }
+                ctx.fillStyle = this.color
+                ctx.fillRect(this.x, this.y, this.r, this.r)
+            },
+    }, 'camera')
 }
 
 module.exports = Gun

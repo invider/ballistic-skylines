@@ -41,7 +41,11 @@ module.exports = {
 			dir.stop()
 			dir = undefined;
 		}
-		lab.camera.x = target.x = lab.gun.x
+	    target.x = lab.gun.x
+        lab.camera.target = {
+            x: target.x,
+            y: lab.camera.y
+        }
 	},
 
 	stop : function(d) {

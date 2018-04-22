@@ -1,6 +1,8 @@
 
-let FQ = 2
+let FQ = 1
 let timer = 0
+let surplus = 0
+let oreTimer = 0
 
 module.exports = {
 
@@ -8,12 +10,30 @@ module.exports = {
 
     init: function() {
         env.population = 0
-        env.raw = 100
+        env.ore = 100
+        env.oreIncome = 0
     },
 
-    evo: function(dt) {
+    addOre: function(n) {
+        env.oreIncome += Math.floor(n)
+    },
+
+    handleOre: function(dt) {
+        if (env.oreIncome > 0) {
+            oreTimer += dt
+            if (oreTimer > env.oreCounter) {
+                oreTimer -= env.oreCounter
+                env.ore ++
+                env.oreIncome --
+                lib.sfx(res.sfx.pickup, 0.3)
+            }
+        }
+    },
+
+    handlePopulation: function(dt) {
         timer += dt
         if (timer < FQ) return
+        timer -= FQ
 
         let blocks = 0
         lab.camera._ls.forEach(e => {
@@ -21,7 +41,29 @@ module.exports = {
                 blocks += e.floor
             }
         })
-        env.population = blocks * env.tuning.sectionPopulation
+        env.populationCapacity = blocks * env.sectionCapacity
+        if (env.populationCapacity > env.population) {
+            if (env.population < env.populationInitialGrowth) {
+                env.population++
+            } else {
+                surplus += env.population * env.populationGrowthFactor * lib.math.rndf()*2
+                if (surplus > 1) {
+                    env.population += Math.floor(surplus)
+                    surplus = 0
+                }
+            }
+        } else if (env.populationCapacity < env.population * env.populationDecreseCapacity) { 
+            surplus -= env.population * env.populationGrowthFactor * lib.math.rndf()*2
+            if (surplus < -1) {
+                env.population += Math.floor(surplus)
+                surplus = 0
+            }
+        }
+    },
+
+    evo: function(dt) {
+        this.handleOre(dt)
+        this.handlePopulation(dt)
     },
 
     draw: function() {
@@ -39,9 +81,9 @@ module.exports = {
         ctx.textBaseline = 'top'
 
         ctx.fillStyle = '#F0A000'
-        ctx.fillText(msg, ctx.width * 0.8, 10)
+        ctx.fillText(msg, ctx.width * 0.7, 10)
 
         ctx.fillStyle = '#80F000'
-        ctx.fillText('Raw Materials: ' + env.raw + 'T', ctx.width * 0.3, 10)
+        ctx.fillText('Ore: ' + env.ore, ctx.width * 0.3, 10)
     }
 }
