@@ -14,6 +14,24 @@ let Gun = function(st) {
     this.w = W
     this.h = H
     this.name = 'gun'
+    this.capsuleType = (function() {
+    	let types = arguments
+    	let index = 0;
+    	return {
+			value: function() {
+				return types[index]
+			},
+			
+			prev: function() {
+				index = (index == 0 ? types.length : index) - 1
+			},
+			
+			next: function() {
+				let i=index+1
+				index = i == types.length ? 0 : i
+			}
+    	}
+    })(dna.Capsule.Type.Build, dna.Capsule.Type.Teleport)
 
     sys.augment(this, st)
 
@@ -51,7 +69,7 @@ Gun.prototype.fire = function() {
         let bx = lib.math.vecX(this.aim) * (BARREL+CAPSULE_SHIFT)
         let by = lib.math.vecY(this.aim) * (BARREL+CAPSULE_SHIFT)
         sys.spawn('Capsule', {
-        	type: dna.Capsule.Type.Build,
+        	type: this.capsuleType.value(),
             x: this.x + bx,
             y: this.y - this.h/2 + by,
             a: this.aim,
@@ -92,11 +110,11 @@ Gun.prototype.stop = function(dir) {
 }
 
 Gun.prototype.next = function(dir) {
-    // next weapon type
+	this.capsuleType.next()
 }
 
 Gun.prototype.prev = function(dir) {
-    // prev weapon type
+	this.capsuleType.prev()
 }
 
 Gun.prototype.evo = function(dt) {
