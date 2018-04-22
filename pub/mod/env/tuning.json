@@ -3,5 +3,6 @@
     "minCharge": 30,
     "initialMaxCharge": 150,
     "initialRechargeSpeed": 75,
-    "maxSectionShift": 0.2
+    "maxSectionShift": 0.2,
+    "meteorProbability": 0.1
 }

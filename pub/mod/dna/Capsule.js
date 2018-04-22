@@ -15,6 +15,23 @@ let Capsule = function(st) {
 }
 
 Capsule.prototype.ground = function(x) {
+    if (x < env.worldStart || x > env.worldEnd) {
+        sys.spawn('Emitter', {
+                x: x,
+                y: 0,
+                img: res.dustParticle,
+                lifespan: 0.5,
+                force: 300,
+                size: 20, vsize: 10,
+                speed: 50, vspeed: 0,
+                angle: Math.PI,
+                spread: Math.PI,
+                minLifespan: 0.5,
+                vLifespan: 0.5,
+        }, 'camera')
+        lib.sfx(res.sfx.explosion[lib.math.rndi(res.sfx.explosion.length)], 0.7)
+        return
+    }
     // find if a building is there
     let building = null
     lab.camera._ls.forEach(e => {
