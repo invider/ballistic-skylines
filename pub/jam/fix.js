@@ -954,11 +954,28 @@ Mod.prototype.patch = function(target, path, node) {
         }
     }
 
+    let index = -1
+    let di = path.lastIndexOf('-')
+    if (di > 0) {
+        let strIndex = path.substring(di+1)
+        index = parseInt(strIndex)
+        if (isNaN(index)) {
+            index = -1
+        } else {
+            path = path.substring(0, di)
+        }
+    }
+
     if (node !== undefined) {
         // found the patch point - attach the node
         if (isFrame(target)) {
             if (path === '') {
                 target.attach(node)
+            } else if (index >= 0) {
+                if (!isArray(target[path])) {
+                    target.attach([], path)
+                }
+                target[path][index] = node
             } else {
                 if (isObj(target[path])) {
                     // TODO replace or augment? how to decide?
@@ -976,10 +993,19 @@ Mod.prototype.patch = function(target, path, node) {
                 }
             }
         } else if (isArray(target)) {
-            target.push(node)
+            if (index >= 0) {
+                target[index] = node
+            } else {
+                target.push(node)
+            }
         } else if (isObj(target)) {
             if (path === '') throw { src: this, msg: "can't attach anonymous node to " + target }
-            if (isObj(target[path])) {
+            if (index >= 0) {
+                if (!isArray(target[path])) {
+                    target[path] = []
+                }
+                target[path][index] = node
+            } else if (isObj(target[path])) {
                 augment(target[path], node)
             } else if (target[path] !== undefined) {
                 // TODO doesn't work property for frames - _dir and _ls stays the same

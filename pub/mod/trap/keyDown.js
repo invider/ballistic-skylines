@@ -1,5 +1,4 @@
 module.exports = function(e) {
-    log.out(e.key)
     switch(e.key) {
     case ' ': lab.camera.gun.hold(); break;
     case 'Shift': lab.camera.gun.holdToLast(); break;

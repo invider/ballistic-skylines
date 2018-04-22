@@ -14,7 +14,7 @@ module.exports = function() {
     // spawn a gun under the camera
     sys.spawn('Gun', {
         x: 0,
-        y: 0,
+        y: -16,
     }, 'camera')
 
     // spawn world coordinate grid

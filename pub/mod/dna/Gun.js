@@ -8,7 +8,7 @@ let TURN_SPEED = 2
 
 let Gun = function(st) {
     this.w = 64
-    this.h = 64
+    this.h = 32
     this.name = 'gun'
 
     sys.augment(this, st)
