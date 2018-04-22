@@ -7,5 +7,7 @@ module.exports = function(e) {
 
     case 'ArrowUp': lab.gun.prev(); break;
     case 'ArrowDown': lab.gun.next(); break;
+    case ',': lab.camControls.move({stop:true,dir:lab.camControls.left}); break;
+    case '.': lab.camControls.move({stop:true,dir:lab.camControls.right}); break;
     }
 }
