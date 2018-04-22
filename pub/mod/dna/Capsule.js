@@ -14,10 +14,27 @@ let Capsule = function(st) {
     }
 }
 
-Capsule.prototype.ground = function(p) {
-	sys.spawn('Building', {
-		p: p
-	}, 'camera')
+Capsule.prototype.ground = function(x) {
+    // find if a building is there
+    let building = null
+    lab.camera._ls.forEach(e => {
+        if (e instanceof dna.Building && e.test(x)) building = e
+    })
+
+    if (building) {
+        // grow existing
+        log.out('growing')
+        building.floor ++
+    } else {
+        // build new building
+        log.out('net building')
+        sys.spawn('Building', {
+            p: {
+                x: x,
+                y: 0,
+            }
+        }, 'camera')
+    }
 }
 
 Capsule.prototype.evo = function(dt) {
@@ -26,11 +43,9 @@ Capsule.prototype.evo = function(dt) {
 	p.x = this.x + p.vx * p.t
 	p.y = this.y + p.vy * p.t + env.tuning.G * p.t * p.t
 	if(p.y > 0) {
-		this.ground({
-			x: p.x,
-			y: p.y = 0
-		})
-		this.x = p.x
+        // hit the ground
+		this.ground(p.x)
+        this.x = p.x
 		this.y = p.y
 		p.vx = 0
 		p.vy = 0

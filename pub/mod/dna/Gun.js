@@ -33,7 +33,6 @@ Gun.prototype.fire = function() {
     mv[3] = false
     mv[4] = false
 
-    log.out('fire charge: ' + this.charge)
     if (this.charge> env.tuning.minCharge) {
         // shoot
         sys.spawn('Capsule', {
