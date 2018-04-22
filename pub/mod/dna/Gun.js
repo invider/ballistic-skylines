@@ -1,15 +1,18 @@
 let mv = []
 
-let BARREL = 30
+let W = 64
+let H = 32
+let BARREL = 35
 let CAPSULE_SHIFT = 7
+let MOUNT_POINT = -14
 
 let MIN_AIM = Math.PI + 0.4
 let MAX_AIM = 2*Math.PI - 0.4
 let TURN_SPEED = 2
 
 let Gun = function(st) {
-    this.w = 64
-    this.h = 32
+    this.w = W
+    this.h = H
     this.name = 'gun'
 
     sys.augment(this, st)
@@ -129,17 +132,17 @@ Gun.prototype.draw = function() {
     let bx = lib.math.vecX(this.aim) * BARREL
     let by = lib.math.vecY(this.aim) * BARREL
     ctx.strokeStyle = '#505050'
-    ctx.lineWidth = 6
+    ctx.lineWidth = 10
     ctx.beginPath()
-    ctx.moveTo(0, -this.h/2)
-    ctx.lineTo(bx, by-this.h/2)
+    ctx.moveTo(0, MOUNT_POINT)
+    ctx.lineTo(bx, by + MOUNT_POINT)
     ctx.stroke()
 
     ctx.strokeStyle = '#202020'
     ctx.lineWidth = 4
     ctx.beginPath()
-    ctx.moveTo(0, -this.h/2)
-    ctx.lineTo(bx, by-this.h/2)
+    ctx.moveTo(0, MOUNT_POINT)
+    ctx.lineTo(bx, by + MOUNT_POINT)
     ctx.stroke()
 
     let charge = (1 - this.charge/this.maxCharge) * BARREL
@@ -149,8 +152,8 @@ Gun.prototype.draw = function() {
     if (this.charge < env.tuning.minCharge) ctx.strokeStyle = '#ff0000'
     else ctx.strokeStyle = '#ff9000'
     ctx.beginPath()
-    ctx.moveTo(bx, by-this.h/2)
-    ctx.lineTo(cx, cy - this.h/2)
+    ctx.moveTo(bx, by + MOUNT_POINT)
+    ctx.lineTo(cx, cy + MOUNT_POINT)
     ctx.stroke()
 
     // draw body

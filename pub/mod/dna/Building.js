@@ -14,13 +14,7 @@ Building.prototype.test = function(x) {
     return (x >= this.p.x - this.w/2 && x <= this.p.x + this.w/2)
 }
 
-Building.prototype.build = function(x) {
-    let shift = this.p.x - x
-    shift = lib.math.limitMax(shift, this.w * env.tuning.maxSectionShift)
-    shift = lib.math.limitMin(shift, -this.w * env.tuning.maxSectionShift)
-    this.shift[this.floor] = shift
-    this.section[this.floor++] = lib.math.rndi(3)
-
+Building.prototype.foundationSmoke = function() {
     sys.spawn('Emitter', {
             x: this.p.x,
             y: this.p.y,
@@ -47,6 +41,26 @@ Building.prototype.build = function(x) {
             minLifespan: 1,
             vLifespan: 1 
     }, 'camera')
+}
+
+Building.prototype.demolish = function() {
+    this.shift.slice(1)
+    this.section.slice(1)
+    this.floor--
+    this.foundationSmoke()
+    if (this.floor === 0) {
+        this.__.detach(this)
+    }
+}
+
+Building.prototype.build = function(x) {
+    let shift = this.p.x - x
+    shift = lib.math.limitMax(shift, this.w * env.tuning.maxSectionShift)
+    shift = lib.math.limitMin(shift, -this.w * env.tuning.maxSectionShift)
+    this.shift[this.floor] = shift
+    this.section[this.floor++] = lib.math.rndi(3)
+
+    this.foundationSmoke()
 
     sys.spawn('Emitter', {
             x: this.p.x - shift,
