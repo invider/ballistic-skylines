@@ -19,16 +19,23 @@ Meteor.prototype.evo = function(dt) {
                 x: this.x,
                 y: 0,
                 img: res.dustParticle,
-                lifespan: 1,
-                force: 100,
+                lifespan: 0.2,
+                force: 150,
                 size: 30, vsize: 20,
                 speed: 50, vspeed: 0,
                 angle: Math.PI,
                 spread: Math.PI,
-                minLifespan: 0.7,
-                vLifespan: 0.8,
+                minLifespan: 0.5,
+                vLifespan: 0.3,
         }, 'camera')
         lib.sfx(res.sfx.explosion[1], 1)
+
+        let x = this.x
+        lab.camera._ls.forEach(e => {
+            if (e instanceof dna.Building && e.test(x)) {
+                e.demolish()
+            }
+        })
 
         this.__.detach(this)
     }

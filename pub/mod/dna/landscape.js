@@ -3,7 +3,7 @@ module.exports = function() {
         Z: 0,
         draw: function() {
             ctx.fillStyle = '#252030'
-            ctx.fillRect(env.worldStart, 0, env.worldEnd - env.worldStart, 800)
+            ctx.fillRect(env.worldStart, 0, env.worldEnd - env.worldStart, 500)
 
             ctx.strokeStyle = '#600090'
             ctx.lineWidth = 4
