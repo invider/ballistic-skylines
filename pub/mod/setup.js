@@ -7,6 +7,7 @@ module.exports = function() {
     // spawn camera
     sys.spawn('SlideCamera', {
         name: 'camera',
+        Z: 10,
         x: 0,
         y: -ctx.height/4,
         keys: [],

@@ -4,8 +4,11 @@ let timer = 0
 
 module.exports = {
 
+    Z: 100,
+
     init: function() {
         env.population = 0
+        env.raw = 100
     },
 
     evo: function(dt) {
@@ -32,9 +35,13 @@ module.exports = {
         }
 
         ctx.font = '28px zekton'
-        ctx.fillStyle = '#F0A000'
         ctx.textAlign = 'center'
         ctx.textBaseline = 'top'
+
+        ctx.fillStyle = '#F0A000'
         ctx.fillText(msg, ctx.width * 0.8, 10)
+
+        ctx.fillStyle = '#80F000'
+        ctx.fillText('Raw Materials: ' + env.raw + 'T', ctx.width * 0.3, 10)
     }
 }
