@@ -61,6 +61,8 @@ Building.prototype.build = function(x) {
             minLifespan: 0.5,
             vLifespan: 0.5,
     }, 'camera')
+
+    lib.sfx(res.sfx.explosion[lib.math.rndi(res.sfx.explosion.length)], 0.7)
 }
 
 Building.prototype.evo = function(dt) {

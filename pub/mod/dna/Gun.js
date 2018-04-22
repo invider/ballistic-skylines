@@ -34,7 +34,7 @@ Gun.prototype.fire = function() {
     mv[3] = false
     mv[4] = false
 
-    if (this.charge> env.tuning.minCharge) {
+    if (this.charge > env.tuning.minCharge) {
         // shoot capsule
         let bx = lib.math.vecX(this.aim) * (BARREL+CAPSULE_SHIFT)
         let by = lib.math.vecY(this.aim) * (BARREL+CAPSULE_SHIFT)
@@ -61,8 +61,11 @@ Gun.prototype.fire = function() {
                 minLifespan: 0.6,
                 vLifespan: 0.4
         }, 'camera')
+        lib.sfx(res.sfx.shot, 0.5)
 
         this.lastCharge = this.charge
+    } else {
+        lib.sfx(res.sfx.malfunction, 0.5)
     }
     this.charge = 0
 }
