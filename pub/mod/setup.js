@@ -1,6 +1,9 @@
 module.exports = function() {
     log.out('setting up the scene')
 
+    env.worldStart = -1000
+    env.worldEnd = 1000
+
     // spawn camera
     sys.spawn('SlideCamera', {
         name: 'camera',
