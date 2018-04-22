@@ -23,6 +23,7 @@ let evos = [ function(p) {
 module.exports = function(st) {
 	let config = env.tuning.vehicle
 
+    let type = lib.math.rndi(res.car.length)
 	let dx = lib.math.rnds()
 	let x0 = lab.camera.x - 0.55 * dx * ctx.width
 	let p = {
@@ -43,7 +44,9 @@ module.exports = function(st) {
 			let h = st.h || 21
 			ctx.save()
 			ctx.translate(p.x, p.y)
-			ctx.drawImage(res.gun, -w/2, -h/2, w, h)
+            ctx.imageSmoothingEnabled = false
+            ctx.scale(dx, 1);
+            ctx.drawImage(res.car[type], -w/2, -h/2, w, h)
 			ctx.restore()
 		}
 	}
