@@ -48,6 +48,7 @@ Gun.prototype.fire = function() {
         let bx = lib.math.vecX(this.aim) * (BARREL+CAPSULE_SHIFT)
         let by = lib.math.vecY(this.aim) * (BARREL+CAPSULE_SHIFT)
         sys.spawn('Capsule', {
+        	type: dna.Capsule.Type.Build,
             x: this.x + bx,
             y: this.y - this.h/2 + by,
             a: this.aim,

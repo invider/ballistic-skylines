@@ -36,26 +36,28 @@ module.exports = {
 		}
 	},
 
-	move : function(params) {
-		if (params.center) {
+	center : function() {
+		if (dir != undefined) {
+			dir.stop()
+			dir = undefined;
+		}
+		lab.camera.x = target.x = lab.gun.x
+	},
+
+	stop : function(d) {
+		if (dir != undefined && (d == undefined || d === dir)) {
+			dir.stop()
+			dir = undefined
+		}
+	},
+
+	move : function(d) {
+		if (d !== dir) {
 			if (dir != undefined) {
 				dir.stop()
-				dir = undefined;
 			}
-			lab.camera.x = target.x = 0
-		} else if (params.stop) {
-			if (dir === params.dir) {
-				dir.stop()
-				dir = undefined
-			}
-		} else if (params.dir) {
-			if (dir !== params.dir) {
-				if (dir != undefined) {
-					dir.stop()
-				}
-				dir = params.dir
-				t = 0
-			}
+			dir = d
+			t = 0
 		}
 	}
 }
