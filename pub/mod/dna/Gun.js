@@ -30,6 +30,15 @@ Gun.prototype.holdToLast = function() {
     mv[4] = true
 }
 
+Gun.prototype.unhold = function() {
+    if (!this.lastFire) {
+        lib.sfx(res.sfx.malfunction, 0.5)
+    }
+    mv[4] = false
+    this.charge = 0
+    this.lastFire = false
+}
+
 Gun.prototype.fire = function() {
     mv[3] = false
     mv[4] = false

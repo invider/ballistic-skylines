@@ -1,7 +1,7 @@
 module.exports = function(e) {
     switch(e.key) {
     case ' ': lab.gun.fire(); break;
-    case 'Shift': lab.gun.lastFire = false;
+    case 'Shift': lab.gun.unhold(); break;
     case 'ArrowLeft': lab.gun.stop(1); break;
     case 'ArrowRight': lab.gun.stop(2); break;
 
