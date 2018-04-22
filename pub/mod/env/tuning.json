@@ -1,9 +1,10 @@
 {
-	"gravity": 8,
-	"minCharge": 30,
-	"initialMaxCharge": 150,
-	"initialRechargeSpeed": 75,
-	"maxSectionShift": 0.2,
+    "gravity": 8,
+    "minCharge": 30,
+    "initialMaxCharge": 150,
+    "initialRechargeSpeed": 75,
+    "maxSectionShift": 0.2,
+    "meteorProbability": 0.1,
 	"vehicle": {
 	    "t1": 3,
 	    "t2": 10,
