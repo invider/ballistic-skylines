@@ -14,43 +14,58 @@ let Capsule = function(st) {
     }
 }
 
-Capsule.prototype.ground = function(x) {
-    if (x < env.worldStart || x > env.worldEnd) {
-        sys.spawn('Emitter', {
-                x: x,
-                y: 0,
-                img: res.dustParticle,
-                lifespan: 0.5,
-                force: 300,
-                size: 20, vsize: 10,
-                speed: 50, vspeed: 0,
-                angle: Math.PI,
-                spread: Math.PI,
-                minLifespan: 0.5,
-                vLifespan: 0.5,
-        }, 'camera')
-        lib.sfx(res.sfx.explosion[lib.math.rndi(res.sfx.explosion.length)], 0.7)
-        return
-    }
-    // find if a building is there
-    let building = null
-    lab.camera._ls.forEach(e => {
-        if (e instanceof dna.Building && e.test(x)) building = e
-    })
+Capsule.Type = {
+	Build: {
+		ground: function(x) {
+			if (x < env.worldStart || x > env.worldEnd) {
+				sys.spawn('Emitter', {
+						x: x,
+	                	y: 0,
+	                	img: res.dustParticle,
+	                	lifespan: 0.5,
+	                	force: 300,
+	                	size: 20, vsize: 10,
+	                	speed: 50, vspeed: 0,
+	                	angle: Math.PI,
+	                	spread: Math.PI,
+	                	minLifespan: 0.5,
+	                	vLifespan: 0.5,
+				}, 'camera')
+				lib.sfx(res.sfx.explosion[lib.math.rndi(res.sfx.explosion.length)], 0.7)
+				return
+			}
+			// find if a building is there
+			let building = null
+			lab.camera._ls.forEach(e => {
+				if (e instanceof dna.Building && e.test(x)) building = e
+			})
 
-    if (building) {
-        // grow existing
-        building.build(x)
-    } else {
-        // build new building
-        building = sys.spawn('Building', {
-            p: {
-                x: x,
-                y: 0
-            }
-        }, 'camera')
-        building.build(x)
-    }
+			if (building) {
+				// grow existing
+				building.build(x)
+			} else {
+				// build new building
+				building = sys.spawn('Building', {
+					p: {
+						x: x,
+						y: 0
+					}
+				}, 'camera')
+				building.build(x)
+			}
+		}
+	},
+	
+	Teleport: {
+		ground: function(x) {
+			lab.gun.x = x
+			lab.camControls.stop()
+			lab.camera.target = {
+				x: x,
+				y: lab.camera.y
+			}
+		}
+	}
 }
 
 Capsule.prototype.evo = function(dt) {
@@ -60,7 +75,9 @@ Capsule.prototype.evo = function(dt) {
 	p.y = this.y + p.vy * p.t + env.tuning.gravity * p.t * p.t
 	if(p.y > 0) {
         // hit the ground
-		this.ground(p.x)
+		if(this.type) {
+			this.type.ground(p.x)
+		} 
         // remove the capsule
         this.__.detach(this)
 	}
