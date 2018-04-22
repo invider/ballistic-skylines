@@ -1,5 +1,5 @@
 let Building = function(st) {
-    this.Z = 1
+    this.Z = 100
     sys.augment(this, st)
 
     this.w = this.w || 64
@@ -7,14 +7,20 @@ let Building = function(st) {
     this.floor = 0
     this.fh = 32
     this.section = []
+    this.shift = []
 }
 
 Building.prototype.test = function(x) {
     return (x >= this.p.x - this.w/2 && x <= this.p.x + this.w/2)
 }
 
-Building.prototype.build = function() {
+Building.prototype.build = function(x) {
+    let shift = this.p.x - x
+    shift = lib.math.limitMax(shift, this.w * env.tuning.maxSectionShift)
+    shift = lib.math.limitMin(shift, -this.w * env.tuning.maxSectionShift)
+    this.shift[this.floor] = shift
     this.section[this.floor++] = lib.math.rndi(3)
+
     sys.spawn('Emitter', {
             x: this.p.x,
             y: this.p.y,
@@ -43,7 +49,7 @@ Building.prototype.build = function() {
     }, 'camera')
 
     sys.spawn('Emitter', {
-            x: this.p.x,
+            x: this.p.x - shift,
             y: this.p.y - this.floor * this.fh,
             img: res.dustParticle,
             lifespan: 0.5,
@@ -68,7 +74,8 @@ Building.prototype.draw = function() {
 
     let by = -this.fh
     for (let i = 0; i < this.floor; i++) {
-        ctx.drawImage(res.section[this.section[i]], -this.w/2, by, this.w, this.fh)
+        ctx.drawImage(res.section[this.section[i]],
+            -this.w/2 - this.shift[i], by, this.w, this.fh)
         by -= this.fh
     }
 

@@ -1,9 +1,9 @@
 let Capsule = function(st) {
     sys.augment(this, st)
 
-    this.collidable = true
-    this.w = this.w || 10
-    this.h = this.h || 10
+    this.w = 15
+    this.h = 15
+
     this.color = this.color || '#700090'
     this.p = {
     	vx: this.v * lib.math.vecX(this.a),
@@ -23,18 +23,16 @@ Capsule.prototype.ground = function(x) {
 
     if (building) {
         // grow existing
-        log.out('growing')
-        building.build()
+        building.build(x)
     } else {
         // build new building
-        log.out('net building')
         building = sys.spawn('Building', {
             p: {
                 x: x,
-                y: 0,
+                y: 0
             }
         }, 'camera')
-        building.build()
+        building.build(x)
     }
 }
 
@@ -57,9 +55,8 @@ Capsule.prototype.evo = function(dt) {
 
 Capsule.prototype.draw = function() {
 	ctx.save()
-	ctx.fillStyle = this.color
 	ctx.translate(this.p.x, this.p.y)
-	ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h)
+    ctx.drawImage(res.capsule, -this.w/2, -this.h/2, this.w, this.h)
 	ctx.restore()
 }
 
