@@ -113,6 +113,9 @@ Emitter.prototype.emit = function(dt) {
 Emitter.prototype.evo = function(dt) {
     if (this.dead) this.__.detach(this)
 
+    if (this.dx) this.x += this.dx * dt
+    if (this.dy) this.y += this.dy * dt
+
     if (this.lifespan > 0) {
         this.lifespan -= dt
         if (this.lifespan < 0) {

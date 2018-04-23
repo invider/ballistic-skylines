@@ -4,12 +4,15 @@
     "initialMaxCharge": 150,
     "initialRechargeSpeed": 75,
     "maxSectionShift": 0.2,
+    "buildingMinPad": 128,
+
+    "scoopWidth": 256,
 
     "meteorProbability": 0.2,
-    "meteorSpeedY": 800,
+    "meteorSpeedY": 1000,
     "meteorSpeedVY": 600,
     "meteorSpeedX": 200,
-    "meteorSpeedVX": 800,
+    "meteorSpeedVX": 400,
     "meteorMinOre": 10,
     "meteorMaxOre": 50,
     "oreCounter": 0.25,
@@ -24,7 +27,6 @@
         "s1": 1,
         "s2": 3
 	},
-    "scoopFreeSpace": 500,
 
     "sectionCapacity": 250,
     "populationInitialGrowth": 10,

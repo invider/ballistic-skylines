@@ -36,6 +36,12 @@ SlideCamera.prototype.screenY = function(y) {
     return (y - this.y)*this.scale + ctx.height/2
 }
 
+SlideCamera.prototype.inView = function(x, y) {
+    let sx = this.screenX(x)
+    let sy = this.screenY(y)
+    return (sx >= 0 && sx <= ctx.width && sy >= 0 && sy <= ctx.height)
+}
+
 SlideCamera.prototype.init = function(dt) {
     let cam = this
     sys.after(trap, 'equalDown', function() {

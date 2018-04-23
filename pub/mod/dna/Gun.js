@@ -11,31 +11,28 @@ let MAX_AIM = 2*Math.PI - 0.4
 let TURN_SPEED = 2
 
 let Gun = function(st) {
+    this.type = 1
     this.w = W
     this.h = H
     this.name = 'gun'
-    this.capsuleType = (function() {
-    	let types = arguments
+    this.capsuleType = (function(types) {
     	let index = 0;
     	return {
 			value: function() {
 				return types[index]
 			},
-			
             base: function() {
                 index = 0
             },
-
 			prev: function() {
 				index = (index == 0 ? types.length : index) - 1
 			},
-			
 			next: function() {
 				let i=index+1
 				index = i == types.length ? 0 : i
 			}
     	}
-    })(dna.Capsule.Type.Build, dna.Capsule.Type.Teleport)
+    })(dna.Capsule.Type)
 
     sys.augment(this, st)
 
@@ -209,6 +206,7 @@ Gun.prototype.teleport = function() {
                 ctx.fillRect(this.x, this.y, this.r, this.r)
             },
     }, 'camera')
+    lib.sfx(res.sfx.teleport, 0.4)
 }
 
 Gun.prototype.emplode = function() {

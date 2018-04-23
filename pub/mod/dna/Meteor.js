@@ -24,12 +24,24 @@ Meteor.prototype.ground = function() {
             minLifespan: 0.5,
             vLifespan: 0.3,
     }, 'camera')
-    lib.sfx(res.sfx.explosion[1], 1)
+    if (lab.camera.inView(this.x, this.y)) lib.sfx(res.sfx.meteor, 1)
 
     let x = this.x
     lab.camera._ls.forEach(e => {
         if (e instanceof dna.Building && e.test(x)) {
             e.demolish()
+            sys.spawn('text/fadeText', {
+                font: '24px zekton',
+                fillStyle: '#f01020',
+                x: lab.camera.screenX(this.x),
+                y: lab.camera.screenY(this.y) - 50,
+                text: 'Building Hit!',
+                dx: 20,
+                dy: -30,
+                ttl: 5,
+                tti: 0,
+                ttf: 2,
+            })
         } else if (e instanceof dna.Scoop && e.test(x, this.w)) {
             let ore = Math.round(lib.math.linear(env.meteorMinOre, env.meteorMaxOre, lib.math.rndf()))
             lab.score.addOre(ore)

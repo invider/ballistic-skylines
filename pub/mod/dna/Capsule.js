@@ -13,7 +13,7 @@ let Capsule = function(st) {
     	t: 0
     }
 
-    sys.augment(this, this.type || Capsule.Type.Build)
+    sys.augment(this, this.type || Capsule.Type[0])
 }
 
 Capsule.prototype.explode = function() {
@@ -30,18 +30,23 @@ Capsule.prototype.explode = function() {
             minLifespan: 0.5,
             vLifespan: 0.5,
     }, 'camera')
-    lib.sfx(res.sfx.explosion[lib.math.rndi(res.sfx.explosion.length)], 0.7)
+    lib.sfx(res.sfx.missed, 0.7)
 }
 
-Capsule.Type = {
-	Build: {
+Capsule.prototype.isOutOfScope = function() {
+    if (this.p.x < env.worldStart || this.p.x > env.worldEnd) {
+        this.explode()
+        return true
+    }
+    return false
+}
+
+Capsule.Type = [
+	{
         ore: 2,
         label: 'Construct',
 		ground: function(x) {
-			if (x < env.worldStart || x > env.worldEnd) {
-                this.explode()
-				return
-			}
+            if (this.isOutOfScope()) return
 
 			// find if a building is there
 			let building = null
@@ -50,16 +55,14 @@ Capsule.Type = {
 			})
 
 			if (building) {
-				// grow existing
 				building.build(x, env.tuning)
 			} else {
-                let scoop = false
-                lab.camera._ls.forEach(e => {
-                    if (e instanceof dna.Scoop && e.test(x, env.scoopFreeSpace)) {
-                        scoop = true
-                    }
+                let ocupied = false
+                lab.landscape.apply(x, env.buildingMinPad, e => {
+                    if (e.type === 3) ocupied = true
                 })
-                if (scoop) {
+
+                if (ocupied) {
                     this.explode()
                 } else {
                     // build new building
@@ -74,28 +77,70 @@ Capsule.Type = {
 			}
 		}
 	},
-	Teleport: {
+	{
+        ore: 50,
+        label: 'Scoop',
+		ground: function(x) {
+            if (this.isOutOfScope()) return
+            let ocupied = false
+            lab.landscape.apply(x, env.scoopWidth + env.buildingMinPad, e => {
+                if (e.type > 0 && e.type < 10) ocupied = true
+            })
+            if (ocupied) {
+                this.explode()
+            } else {
+                let scoop = sys.spawn('Scoop', {
+                    x: x,
+                    y: 0
+                }, 'camera')
+            }
+		}
+	},
+	{
         ore: 5,
         label: 'Teleport',
-		ground: function(x) {
-			if (x < env.worldStart || x > env.worldEnd) {
+        ground: function(x) {
+            if (this.isOutOfScope()) return
+
+            let ocupied = false
+            lab.landscape.apply(x, env.buildingMinPad, e => {
+                if (e.type === 3) ocupied = true
+            })
+        
+            if (ocupied) {
                 this.explode()
-				return
-			}
+            } else {
+                lab.gun.emplode()
+                lab.gun.x = x
+                lab.gun.teleport()
+                lab.gun.capsuleType.base()
 
-            lab.gun.emplode()
-			lab.gun.x = x
-            lab.gun.teleport()
-            lab.gun.capsuleType.base()
+                lab.camControls.stop()
+                lab.camera.target = {
+                    x: x,
+                    y: lab.camera.y
+                }
+            }
+        }
+	},
+	{
+        ore: 1,
+        label: 'Destroy',
+        ground: function(x) {
+            if (this.isOutOfScope()) return
 
-			lab.camControls.stop()
-			lab.camera.target = {
-				x: x,
-				y: lab.camera.y
-			}
-		}
+            let targets = []
+            lab.landscape.apply(x, this.w, e => {
+                if (e.type > 0 && e.type < 10) targets.push(e)
+            })
+
+            targets.forEach(e => {
+                if (sys.isFun(e.destroy)) e.destroy()
+            })
+            this.explode()
+        }
 	}
-}
+]
 
 Capsule.prototype.evo = function(dt) {
 	var p = this.p

@@ -14,22 +14,20 @@ module.exports = function() {
         keys: [],
     })
 
-    sys.spawn('landscape', {}, 'camera')
+    lab.landscape = sys.spawn('landscape', {}, 'camera')
 
     // spawn a gun under the camera
-    sys.spawn('Gun', {
+    lab.gun = sys.spawn('Gun', {
         Z: 1000000,
         x: 0,
         y: -16,
     }, 'camera')
-    lab.gun = lab.camera.gun
 
     // spawn a scoop
     sys.spawn('Scoop', {
         x: -300,
         y: -6,
     }, 'camera')
-    lab.gun = lab.camera.gun
 
     /*
     // spawn world coordinate grid
