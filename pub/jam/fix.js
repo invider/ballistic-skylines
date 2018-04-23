@@ -1300,6 +1300,8 @@ Mod.prototype.fixRes = function(target, base, ignore, batch, src, path) {
 }
 
 // TODO provide topology path, so we can have just couple of topologies (sys and base)
+//      topology must be failproof - if we got one, use it
+//      don't overload many times
 var modBatch = 0
 Mod.prototype.fix = function(target, base, ignore, forceBatch, onLoaded) {
     let batch

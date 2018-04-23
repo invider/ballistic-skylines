@@ -2,6 +2,7 @@
 
 rm -f pub/topology
 rm -f pub/**/topology
+rm -f pub/**/.DS_Store
 
 rm -fr pub/man
 

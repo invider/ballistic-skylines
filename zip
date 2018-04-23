@@ -18,8 +18,11 @@ else
     # assemble
     rm -rf zip.tmp
     mkdir zip.tmp
-    cp -R pub/fix ./zip.tmp
+    cp -R pub/jam ./zip.tmp
+    cp -R pub/ext ./zip.tmp
+    cp -R pub/mod ./zip.tmp
     cp -R pub/$1* ./zip.tmp
+    cp pub/$1.html ./zip.tmp/index.html
     cp pub/topology ./zip.tmp
 
     # generate zip and remove artifacts

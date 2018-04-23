@@ -16,6 +16,7 @@ function generate(path) {
     })
 }
 
-generate(syspath)
-generate(basepath)
+generate('pub/jam')
+generate('pub/ext')
+generate('pub/mod')
 
