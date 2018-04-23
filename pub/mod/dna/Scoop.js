@@ -5,7 +5,8 @@ let Scoop = function(st) {
     sys.augment(this, st)
 
     this.w = env.scoopWidth
-    this.h = 12
+    this.h = 32
+    this.y = -17
     this.construct()
     lib.sfx(res.sfx.scoop, 0.7)
 }
@@ -52,8 +53,7 @@ Scoop.prototype.draw = function() {
 	ctx.save()
 	ctx.translate(this.x, this.y)
 
-    ctx.fillStyle = '#C06000'
-    ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h)
+    ctx.drawImage(res.scoop, -this.w/2, -this.h/2, this.w, this.h)
 	ctx.restore()
 }
 

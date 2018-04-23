@@ -39,7 +39,7 @@ Meteor.prototype.ground = function() {
                 dx: 20,
                 dy: -30,
                 ttl: 5,
-                tti: 0,
+                tti: 0.5,
                 ttf: 2,
             })
         } else if (e instanceof dna.Scoop && e.test(x, this.w)) {
@@ -54,11 +54,25 @@ Meteor.prototype.ground = function() {
                 dx: 20,
                 dy: -30,
                 ttl: 5,
-                tti: 0,
+                tti: 0.5,
                 ttf: 2,
             })
         } else if (e instanceof dna.Gun && x > e.x-e.w && x < e.x+e.w) {
-            env.ore = Math.floor(env.ore/2)
+            let minus = Math.floor(env.ore/2)
+            env.ore -= minus
+
+            sys.spawn('text/fadeText', {
+                font: '24px zekton',
+                fillStyle: '#f01020',
+                x: lab.camera.screenX(this.x),
+                y: lab.camera.screenY(this.y) - 50,
+                text: 'Gun Hit! -'+minus + ' ore',
+                dx: 20,
+                dy: -30,
+                ttl: 8,
+                tti: 0.5,
+                ttf: 2,
+            })
         }
     })
 

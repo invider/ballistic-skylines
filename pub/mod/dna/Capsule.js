@@ -44,6 +44,7 @@ Capsule.prototype.isOutOfScope = function() {
 Capsule.Type = [
 	{
         ore: 2,
+        pre: '',
         label: 'Construct',
 		ground: function(x) {
             if (this.isOutOfScope()) return
@@ -79,6 +80,7 @@ Capsule.Type = [
 	},
 	{
         ore: 50,
+        pre: 's',
         label: 'Scoop',
 		ground: function(x) {
             if (this.isOutOfScope()) return
@@ -98,6 +100,7 @@ Capsule.Type = [
 	},
 	{
         ore: 5,
+        pre: 't',
         label: 'Teleport',
         ground: function(x) {
             if (this.isOutOfScope()) return
@@ -125,6 +128,7 @@ Capsule.Type = [
 	},
 	{
         ore: 1,
+        pre: 'd',
         label: 'Destroy',
         ground: function(x) {
             if (this.isOutOfScope()) return
@@ -158,7 +162,7 @@ Capsule.prototype.evo = function(dt) {
 Capsule.prototype.draw = function() {
 	ctx.save()
 	ctx.translate(this.p.x, this.p.y)
-    ctx.drawImage(res.capsule, -this.w/2, -this.h/2, this.w, this.h)
+    ctx.drawImage(res[this.pre + 'capsule'], -this.w/2, -this.h/2, this.w, this.h)
 	ctx.restore()
 }
 

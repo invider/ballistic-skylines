@@ -74,7 +74,7 @@ Building.prototype.build = function(x) {
             vLifespan: 0.5,
     }, 'camera')
 
-    if (this.floor === 1) lib.sfx(res.sfx.explosion[0], 1)
+    if (this.floor === 1) lib.sfx(res.sfx.explosion[0], 0.7)
     else lib.sfx(res.sfx.explosion[1], 0.5)
 }
 
