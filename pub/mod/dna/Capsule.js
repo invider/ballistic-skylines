@@ -60,7 +60,7 @@ Capsule.Type = [
 			} else {
                 let ocupied = false
                 lab.landscape.apply(x, env.buildingMinPad, e => {
-                    if (e.type === 3) ocupied = true
+                    if (e.type === 3 || e.type === 4) ocupied = true
                 })
 
                 if (ocupied) {
@@ -107,7 +107,7 @@ Capsule.Type = [
 
             let ocupied = false
             lab.landscape.apply(x, env.buildingMinPad, e => {
-                if (e.type === 3) ocupied = true
+                if (e.type === 3 || e.type === 4) ocupied = true
             })
         
             if (ocupied) {

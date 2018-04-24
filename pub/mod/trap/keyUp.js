@@ -7,7 +7,13 @@ module.exports = function(e) {
 
     case 'ArrowUp': lab.gun.prev(); break;
     case 'ArrowDown': lab.gun.next(); break;
-    case ',': lab.camControls.stop(lab.camControls.left); break;
-    case '.': lab.camControls.stop(lab.camControls.right); break;
+    case ',':
+            lab.camControls.stop(lab.camControls.left);
+            lab.camControls.center();
+            break;
+    case '.':
+            lab.camControls.stop(lab.camControls.right);
+            lab.camControls.center();
+            break;
     }
 }

@@ -1,13 +1,18 @@
 let Meteor = function() {
-    this.w = 16
-    this.h = 16
-
     let hitX = env.worldStart + (lib.math.rndf() * (env.worldEnd - env.worldStart))
     this.dx = -env.tuning.meteorSpeedX - lib.math.rndi(env.tuning.meteorSpeedVX)
     this.dy = env.tuning.meteorSpeedY - lib.math.rndi(env.tuning.meteorSpeedVY)
 
     this.x = -this.dx * 5 + hitX
     this.y = -this.dy * 5
+
+    this.img = res.meteor[lib.math.rndi(res.meteor.length)]
+
+    this.scale = lib.math.rndf()
+    this.ore = Math.round(lib.math.linear(env.meteorMinOre, env.meteorMaxOre, this.scale))
+
+    this.w = lib.math.linear(12, 32, this.scale)
+    this.h = lib.math.linear(12, 32, this.scale)
 }
 
 Meteor.prototype.ground = function() {
@@ -27,9 +32,15 @@ Meteor.prototype.ground = function() {
     if (lab.camera.inView(this.x, this.y)) lib.sfx(res.sfx.meteor, 1)
 
     let x = this.x
+    let dirty = true
     lab.camera._ls.forEach(e => {
         if (e instanceof dna.Building && e.test(x)) {
             e.demolish()
+            if (this.scale > 0.5) {
+                setTimeout(function() {
+                    e.demolish()
+                }, 1000)
+            }
             sys.spawn('text/fadeText', {
                 font: '24px zekton',
                 fillStyle: '#f01020',
@@ -43,32 +54,35 @@ Meteor.prototype.ground = function() {
                 ttf: 2,
             })
         } else if (e instanceof dna.Scoop && e.test(x, this.w)) {
-            let ore = Math.round(lib.math.linear(env.meteorMinOre, env.meteorMaxOre, lib.math.rndf()))
-            lab.score.addOre(ore)
+            lab.score.addOre(this.ore)
+            dirty = false
+
             sys.spawn('text/fadeText', {
                 font: '24px zekton',
                 fillStyle: '#f04000',
                 x: lab.camera.screenX(this.x),
                 y: lab.camera.screenY(this.y) - 50,
-                text: '+' + ore + ' Ore',
+                text: '+' + this.ore + ' Ore',
                 dx: 20,
                 dy: -30,
                 ttl: 5,
                 tti: 0.5,
                 ttf: 2,
             })
+
         } else if (e instanceof dna.Gun && x > e.x-e.w && x < e.x+e.w) {
-            let minus = Math.floor(env.ore/2)
+            let minus = Math.floor(env.ore * this.scale)
             env.ore -= minus
+            dirty = false
 
             sys.spawn('text/fadeText', {
                 font: '24px zekton',
                 fillStyle: '#f01020',
-                x: lab.camera.screenX(this.x),
+                x: lab.camera.screenX(this.x) + 20,
                 y: lab.camera.screenY(this.y) - 50,
                 text: 'Gun Hit! -'+minus + ' ore',
-                dx: 20,
-                dy: -30,
+                dx: 10,
+                dy: -20,
                 ttl: 8,
                 tti: 0.5,
                 ttf: 2,
@@ -76,6 +90,7 @@ Meteor.prototype.ground = function() {
         }
     })
 
+    if (dirty) sys.spawn('Rubbish', {x: this.x}, 'camera')
     this.__.detach(this)
 }
 
@@ -89,7 +104,7 @@ Meteor.prototype.evo = function(dt) {
 Meteor.prototype.draw = function(dt) {
 	ctx.save()
 	ctx.translate(this.x, this.y)
-    ctx.drawImage(res.capsule, -this.w/2, -this.h/2, this.w, this.h)
+    ctx.drawImage(this.img, -this.w/2, -this.h/2, this.w, this.h)
 	ctx.restore()
 }
 

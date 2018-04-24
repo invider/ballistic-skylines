@@ -12,6 +12,7 @@ function millis() {
 function mkdir(dx) {
 	return {
 		move : function() {
+            target.x = lab.camera.x
 			target.x += lab.camera.speed * dx
 			lab.camera.target = target
 		},

@@ -12,6 +12,5 @@ module.exports = function(e) {
     case 'ArrowRight': lab.gun.move(2); break;
     case ',': lab.camControls.move(lab.camControls.left); break;
     case '.': lab.camControls.move(lab.camControls.right); break;
-    case '/': lab.camControls.center(); break;
     }
 }
