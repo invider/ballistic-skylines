@@ -1,4 +1,5 @@
 {
+    "dayLength": 30,
     "gravity": 8,
     "minCharge": 30,
     "initialMaxCharge": 150,
@@ -18,10 +19,11 @@
     "oreCounter": 0.25,
 
 	"vehicle": {
-	    "t1": 3,
-	    "t2": 10,
-		"y1": 0.5,
-		"y2": 0.2,
+        "minFreq": 0.015,
+        "maxFreq": 2,
+        "populationFactor": 100000,
+		"y1": 0.25,
+		"y2": 0.5,
 		"v1": 30,
 		"v2": 150,
         "s1": 1,

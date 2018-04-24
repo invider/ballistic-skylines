@@ -3,6 +3,7 @@ let FQ = 1
 let timer = 0
 let surplus = 0
 let oreTimer = 0
+let dayTimer = 0
 
 module.exports = {
 
@@ -62,11 +63,14 @@ module.exports = {
     },
 
     evo: function(dt) {
+        dayTimer += dt
         this.handleOre(dt)
         this.handlePopulation(dt)
     },
 
     draw: function() {
+        let day = Math.floor(dayTimer/env.dayLength) + 1
+
         let msg = 'Population: '
         if (env.population > 1000000) {
             msg += Math.round(env.population/100000)/10 + 'K'
@@ -80,10 +84,14 @@ module.exports = {
         ctx.textAlign = 'center'
         ctx.textBaseline = 'top'
 
-        ctx.fillStyle = '#F0A000'
-        ctx.fillText(msg, ctx.width * 0.7, 10)
+        ctx.fillStyle = '#9050FF'
+        ctx.fillText('Day: ' + day, ctx.width * 0.2, 10)
 
         ctx.fillStyle = '#80F000'
-        ctx.fillText('Ore: ' + env.ore, ctx.width * 0.3, 10)
+        ctx.fillText('Ore: ' + env.ore, ctx.width * 0.5, 10)
+
+        ctx.fillStyle = '#F0A000'
+        ctx.fillText(msg, ctx.width * 0.8, 10)
+
     }
 }
