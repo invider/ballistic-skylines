@@ -1,4 +1,4 @@
-let STAR_FQ = 0.8
+let STAR_FQ = 1.6
 let METEOR_FQ = 0.3
 
 // star background
@@ -11,22 +11,23 @@ module.exports =  {
         let star = {
             a: true,
             falling: falling,
-            c: this._.lib.math.rndi(3),
-            x: this._.env.width,
-            y: this._.lib.math.rndi(this._.env.height),
-            s: 4 + this._.lib.math.rndi(8),
-            m: 5 + this._.lib.math.rndi(10),
+            c: lib.math.rndi(3),
+            x: env.width,
+            y: lib.math.rndi(env.height*2) - env.height,
+            s: 4 + lib.math.rndi(8),
+            hs: 1 + lib.math.rndi(3),
+            m: 5 + lib.math.rndi(10),
         }
         if (falling) {
             star = {
                 a: true,
                 falling: falling,
-                c: this._.lib.math.rndi(3),
-                x: this._.lib.math.rndi(this._.env.width*2),
+                c: lib.math.rndi(3),
+                x: lib.math.rndi(env.width*2),
                 y: -20,
                 dx: -150 - lib.math.rndi(150),
                 dy: 300 + lib.math.rndi(300),
-                m: 4 + this._.lib.math.rndi(5),
+                m: 4 + lib.math.rndi(5),
             }
         }
 
@@ -41,14 +42,15 @@ module.exports =  {
     },
 
     spawn: function() {
-        for(let i = 0; i < 180*60; i++) {
-            this.evo(0.015)
+        // make sure the stars fill the whole sky in the beginning
+        for(let i = 0; i < ctx.width/4; i++) {
+            this.evo(1)
         }
     },
 
     evo: function(dt) {
-        if (this._.lib.math.rndf() < STAR_FQ * dt) this.newStar(false)
-        if (this._.lib.math.rndf() < METEOR_FQ * dt) this.newStar(true)
+        if (lib.math.rndf() < STAR_FQ * dt) this.newStar(false)
+        if (lib.math.rndf() < METEOR_FQ * dt) this.newStar(true)
 
         // move stars
         this.stars.forEach( star => {
@@ -58,6 +60,7 @@ module.exports =  {
                 if (star.y > env.height) star.a = false
             } else {
                 star.x -= star.s * dt
+                star.y += star.hs * dt
                 if (star.x < 0) star.a = false
             }
         })

@@ -26,10 +26,12 @@ let Gun = function(st) {
             },
 			prev: function() {
 				index = (index == 0 ? types.length : index) - 1
+                lib.sfx(res.sfx.powerup, 0.6)
 			},
 			next: function() {
 				let i=index+1
 				index = i == types.length ? 0 : i
+                lib.sfx(res.sfx.powerup, 0.6)
 			}
     	}
     })(dna.Capsule.Type)
