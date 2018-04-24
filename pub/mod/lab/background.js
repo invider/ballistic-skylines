@@ -72,6 +72,7 @@ module.exports =  {
         this.stars.forEach( star => {
             let img = res['star-blue']
             switch(star.c) {
+            case 0: img = res['star-red']; break;
             case 1: img = res['star-blue']; break;
             case 2: img = res['star-yellow']; break;
             }

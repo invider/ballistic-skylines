@@ -79,14 +79,29 @@ Meteor.prototype.ground = function() {
                 font: '24px zekton',
                 fillStyle: '#f01020',
                 x: lab.camera.screenX(this.x) + 20,
-                y: lab.camera.screenY(this.y) - 50,
-                text: 'Gun Hit! -'+minus + ' ore',
+                y: lab.camera.screenY(this.y) - 60,
+                text: 'Gun Hit!',
                 dx: 10,
                 dy: -20,
                 ttl: 8,
                 tti: 0.5,
                 ttf: 2,
             })
+
+            if (minus > 0) {
+                sys.spawn('text/fadeText', {
+                    font: '24px zekton',
+                    fillStyle: '#f01020',
+                    x: lab.camera.screenX(this.x) + 20,
+                    y: lab.camera.screenY(this.y) - 30,
+                    text: '-'+minus + ' ore',
+                    dx: 10,
+                    dy: -20,
+                    ttl: 8,
+                    tti: 0.5,
+                    ttf: 2,
+                })
+            }
         }
     })
 
