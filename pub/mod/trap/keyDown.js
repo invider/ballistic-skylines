@@ -1,10 +1,6 @@
-function moveCamera(dx) {
-	let p0 = lab.camera.target || {x:0, y:0}
-	p0.x += dx
-	lab.camera.target = p0
-}
-
 module.exports = function(e) {
+    if (_.paused) return
+
     switch(e.key) {
     case ' ': lab.gun.hold(); break;
     case 'Shift': lab.gun.holdToLast(); break;

@@ -490,6 +490,8 @@ var Mod = function(initObj) {
     this._$ = _scene
     this.ctx = false
     this.focus = true
+    this.paused = false
+    this.hidden = false
 
     Frame.call(this, initObj)
 
@@ -807,6 +809,7 @@ Mod.prototype.evo = function(dt) {
         }
         return
     }
+    if (this.paused) return
 
     // evolve all entities in the lab
     this.lab._ls.forEach( e => {
@@ -820,7 +823,7 @@ Mod.prototype.evo = function(dt) {
 }
 
 Mod.prototype.draw = function() {
-    if (!this.ctx) return
+    if (!this.ctx || this.hidden) return
 
     // boot logic
     if (!this.env.started) {

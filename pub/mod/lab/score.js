@@ -93,5 +93,13 @@ module.exports = {
         ctx.fillStyle = '#F0A000'
         ctx.fillText(msg, ctx.width * 0.8, 10)
 
+        if (_.paused) {
+            ctx.font = '48px zekton'
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+
+            ctx.fillStyle = '#FF80A0'
+            ctx.fillText('Paused', ctx.width/2, ctx.height/3)
+        }
     }
 }
