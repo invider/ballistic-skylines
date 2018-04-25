@@ -16,10 +16,27 @@ let Building = function(st) {
     this.fh = 32
     this.section = []
     this.shift = []
+    this.buildingType = lib.math.rndi(3)
 }
 
 Building.prototype.test = function(x) {
     return (x >= this.p.x - this.w/2 && x <= this.p.x + this.w/2)
+}
+
+Building.prototype.topSmoke = function() {
+    sys.spawn('Emitter', {
+            x: this.p.x - this.shift[this.floor-1],
+            y: this.p.y - this.floor * this.fh,
+            img: res.dustParticle,
+            lifespan: 0.5,
+            force: 300,
+            size: 20, vsize: 10,
+            speed: 50, vspeed: 0,
+            angle: Math.PI,
+            spread: Math.PI,
+            minLifespan: 0.5,
+            vLifespan: 0.5,
+    }, 'camera')
 }
 
 Building.prototype.foundationSmoke = function() {
@@ -52,27 +69,26 @@ Building.prototype.foundationSmoke = function() {
 }
 
 Building.prototype.build = function(x) {
-    let shift = this.p.x - x
-    shift = lib.math.limitMax(shift, this.w * env.tuning.maxSectionShift)
-    shift = lib.math.limitMin(shift, -this.w * env.tuning.maxSectionShift)
-    this.shift[this.floor] = shift
-    this.section[this.floor++] = lib.math.rndi(3)
+    switch(this.buildingType) {
+    case 0:
+        let shift = this.p.x - x
+        shift = lib.math.limitMax(shift, this.w * env.tuning.maxSectionShift)
+        shift = lib.math.limitMin(shift, -this.w * env.tuning.maxSectionShift)
+        this.shift[this.floor] = shift
+        this.section[this.floor++] = 0 + lib.math.rndi(3)
+        break;
+    case 1:
+        this.shift[this.floor] = 0
+        this.section[this.floor++] = 3 + lib.math.rndi(4)
+        break;
+    case 2:
+        this.shift[this.floor] = 0
+        this.section[this.floor++] = 8 + lib.math.rndi(6)
+        break;
+    }
 
     this.foundationSmoke()
-
-    sys.spawn('Emitter', {
-            x: this.p.x - shift,
-            y: this.p.y - this.floor * this.fh,
-            img: res.dustParticle,
-            lifespan: 0.5,
-            force: 300,
-            size: 20, vsize: 10,
-            speed: 50, vspeed: 0,
-            angle: Math.PI,
-            spread: Math.PI,
-            minLifespan: 0.5,
-            vLifespan: 0.5,
-    }, 'camera')
+    this.topSmoke()
 
     if (this.floor === 1) lib.sfx(res.sfx.explosion[0], 0.7)
     else lib.sfx(res.sfx.explosion[1], 0.5)
@@ -98,13 +114,16 @@ Building.prototype.draw = function() {
 }
 
 Building.prototype.demolish = function() {
+    this.topSmoke()
+    this.foundationSmoke()
+
     this.shift.slice(1)
     this.section.slice(1)
     this.floor--
-    this.foundationSmoke()
     if (this.floor === 0) {
         this.__.detach(this)
     }
+    this.topSmoke()
 }
 
 Building.prototype.destroy = function() {
