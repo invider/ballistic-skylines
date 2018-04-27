@@ -15,7 +15,7 @@ module.exports =  {
             x: env.width,
             y: lib.math.rndi(env.height*2) - env.height,
             s: 4 + lib.math.rndi(8),
-            hs: 1 + lib.math.rndi(3),
+            hs: 2 + lib.math.rndi(3),
             m: 5 + lib.math.rndi(10),
         }
         if (falling) {

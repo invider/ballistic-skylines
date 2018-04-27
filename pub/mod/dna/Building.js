@@ -4,6 +4,7 @@ let Z = 1000
 let Building = function(st) {
     this.type = 2
     this.Z = Z++
+    this.Y = lib.math.rndi(5)
     env.maxBuildingZ = Z
 
     sys.augment(this, st)
@@ -16,7 +17,7 @@ let Building = function(st) {
     this.fh = 32
     this.section = []
     this.shift = []
-    this.buildingType = lib.math.rndi(3)
+    this.buildingType = lib.math.rndi(4)
 }
 
 Building.prototype.test = function(x) {
@@ -69,6 +70,7 @@ Building.prototype.foundationSmoke = function() {
 }
 
 Building.prototype.build = function(x) {
+    // building type selection
     switch(this.buildingType) {
     case 0:
         let shift = this.p.x - x
@@ -84,6 +86,10 @@ Building.prototype.build = function(x) {
     case 2:
         this.shift[this.floor] = 0
         this.section[this.floor++] = 8 + lib.math.rndi(6)
+        break;
+    case 3:
+        this.shift[this.floor] = 0
+        this.section[this.floor++] = 15 + lib.math.rndi(4)
         break;
     }
 
@@ -105,8 +111,19 @@ Building.prototype.draw = function() {
 
     let by = -this.fh
     for (let i = 0; i < this.floor; i++) {
-        ctx.drawImage(res.section[this.section[i]],
-            -this.w/2 - this.shift[i], by, this.w, this.fh)
+        let img = res.section[this.section[i]]
+        if (!img) img = res.section[7]
+        ctx.drawImage(img, -this.w/2 - this.shift[i], by, this.w, this.fh)
+
+        let alpha = '00'
+        switch (this.Y) {
+        case 1: alpha = '30'; break;
+        case 2: alpha = '50'; break;
+        case 3: alpha = '80'; break;
+        case 4: alpha = 'A0'; break;
+        }
+        ctx.fillStyle = '#000000' + alpha
+        ctx.fillRect(-this.w/2 - this.shift[i], by, this.w, this.fh)
         by -= this.fh
     }
 

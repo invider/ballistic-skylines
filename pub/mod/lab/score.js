@@ -1,15 +1,15 @@
 
 let FQ = 1
-let timer = 0
 let surplus = 0
+let popTimer = 0
 let oreTimer = 0
-let dayTimer = 0
 
 module.exports = {
 
     Z: 100,
 
     init: function() {
+        env.timer = 0
         env.population = 0
         env.ore = 100
         env.oreIncome = 0
@@ -32,9 +32,9 @@ module.exports = {
     },
 
     handlePopulation: function(dt) {
-        timer += dt
-        if (timer < FQ) return
-        timer -= FQ
+        popTimer += dt
+        if (popTimer < FQ) return
+        popTimer -= FQ
 
         let blocks = 0
         lab.camera._ls.forEach(e => {
@@ -63,13 +63,13 @@ module.exports = {
     },
 
     evo: function(dt) {
-        dayTimer += dt
+        env.timer += dt
         this.handleOre(dt)
         this.handlePopulation(dt)
     },
 
     draw: function() {
-        let day = Math.floor(dayTimer/env.dayLength) + 1
+        let day = Math.floor(env.timer/env.dayLength) + 1
 
         let msg = 'Population: '
         if (env.population > 1000000) {

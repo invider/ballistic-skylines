@@ -128,7 +128,7 @@ Capsule.Type = [
 	},
 	{
         ore: 1,
-        pre: 'd',
+        pre: 'd', // prefix for particular resource type
         label: 'Destroy',
         ground: function(x) {
             if (this.isOutOfScope()) return

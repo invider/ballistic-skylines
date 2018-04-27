@@ -8,6 +8,8 @@
     "buildingMinPad": 128,
 
     "scoopWidth": 256,
+    "scoopHits": 5,
+    "scoopHitTime": 10,
 
     "meteorProbability": 0.2,
     "meteorSpeedY": 1000,

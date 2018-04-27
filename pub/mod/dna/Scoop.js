@@ -7,19 +7,21 @@ let Scoop = function(st) {
     this.w = env.scoopWidth
     this.h = 32
     this.y = -17
+    this.hits = 0
+
     this.construct()
-    lib.sfx(res.sfx.scoop, 0.7)
+    lib.sfx(res.sfx.scoop, 0.4)
 }
 
 Scoop.prototype.construct = function() {
-    this.c2(-150)
-    this.c2(150)
+    this.c2(this.x, -150)
+    this.c2(this.x, 150)
 }
 
-Scoop.prototype.c2 = function(dx) {
+Scoop.prototype.c2 = function(x, dx) {
     sys.spawn('Emitter', {
             dx: dx,
-            x: this.x,
+            x: x,
             y: this.y,
             color: '#FFD080',
             lifespan: 0.75,
@@ -58,7 +60,19 @@ Scoop.prototype.draw = function() {
 }
 
 Scoop.prototype.destroy = function() {
-    this.__.detach(this)
+    if (this.lastHit && env.timer-this.lastHit < env.scoopHitTime) {
+        this.hits++
+        this.lastHit = env.timer
+
+        if (this.hits >= env.scoopHits) {
+            this.c2(this.x+this.w/2, -150)
+            this.c2(this.x-this.w/2, 150)
+            this.__.detach(this)
+        }
+    } else {
+        this.hits = 1
+        this.lastHit = env.timer
+    }
 }
 
 module.exports = Scoop
