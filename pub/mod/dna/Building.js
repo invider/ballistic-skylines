@@ -4,7 +4,7 @@ let Z = 1000
 let Building = function(st) {
     this.type = 2
     this.Z = Z++
-    this.Y = lib.math.rndi(5)
+    this.Y = 0
     env.maxBuildingZ = Z
 
     sys.augment(this, st)
@@ -17,11 +17,12 @@ let Building = function(st) {
     this.fh = 32
     this.section = []
     this.shift = []
+    this.hits = 0
     this.buildingType = lib.math.rndi(4)
 }
 
 Building.prototype.test = function(x) {
-    return (x >= this.p.x - this.w/2 && x <= this.p.x + this.w/2)
+    return (this.Y === 0 && x >= this.p.x - this.w/2 && x <= this.p.x + this.w/2)
 }
 
 Building.prototype.topSmoke = function() {
@@ -98,6 +99,10 @@ Building.prototype.build = function(x) {
 
     if (this.floor === 1) lib.sfx(res.sfx.explosion[0], 0.7)
     else lib.sfx(res.sfx.explosion[1], 0.5)
+
+    if (this.floor > 10) {
+        this.Y = 1 + lib.math.rndi(7)
+    }
 }
 
 Building.prototype.evo = function(dt) {
@@ -118,11 +123,14 @@ Building.prototype.draw = function() {
         let alpha = '00'
         switch (this.Y) {
         case 1: alpha = '30'; break;
-        case 2: alpha = '50'; break;
-        case 3: alpha = '80'; break;
-        case 4: alpha = 'A0'; break;
+        case 2: alpha = '40'; break;
+        case 3: alpha = '50'; break;
+        case 4: alpha = '60'; break;
+        case 5: alpha = '70'; break;
+        case 6: alpha = '80'; break;
+        case 7: alpha = 'A0'; break;
         }
-        ctx.fillStyle = '#000000' + alpha
+        ctx.fillStyle = '#050010' + alpha
         ctx.fillRect(-this.w/2 - this.shift[i], by, this.w, this.fh)
         by -= this.fh
     }
@@ -144,7 +152,14 @@ Building.prototype.demolish = function() {
 }
 
 Building.prototype.destroy = function() {
-    this.demolish()
+    if (this.Y > 0) {
+        this.hits++
+        if (this.hits >= this.Y) {
+            this.demolish()
+        }
+    } else {
+        this.demolish()
+    }
 }
 
 module.exports = Building
