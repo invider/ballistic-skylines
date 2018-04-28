@@ -39,7 +39,7 @@ Meteor.prototype.ground = function() {
             if (this.scale > 0.5) {
                 setTimeout(function() {
                     e.demolish()
-                }, 1000)
+                }, 2000)
             }
             sys.spawn('text/fadeText', {
                 font: '24px zekton',
@@ -81,7 +81,7 @@ Meteor.prototype.ground = function() {
                 x: lab.camera.screenX(this.x) + 20,
                 y: lab.camera.screenY(this.y) - 60,
                 text: 'Gun Hit!',
-                dx: 10,
+                dx: -20,
                 dy: -20,
                 ttl: 8,
                 tti: 0.5,
@@ -95,7 +95,7 @@ Meteor.prototype.ground = function() {
                     x: lab.camera.screenX(this.x) + 20,
                     y: lab.camera.screenY(this.y) - 30,
                     text: '-'+minus + ' ore',
-                    dx: 10,
+                    dx: -20,
                     dy: -20,
                     ttl: 8,
                     tti: 0.5,
@@ -110,6 +110,7 @@ Meteor.prototype.ground = function() {
 }
 
 Meteor.prototype.evo = function(dt) {
+
     this.x += this.dx * dt
     this.y += this.dy * dt
 

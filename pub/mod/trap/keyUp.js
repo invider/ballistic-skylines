@@ -4,6 +4,8 @@ module.exports = function(e) {
         return
     }
 
+    //log.out(e.code)
+
     switch(e.code) {
     case 'Space': lab.gun.fire(); break;
     case 'ShiftRight':
@@ -26,5 +28,6 @@ module.exports = function(e) {
     case 'BracketLeft': lab.panel.volumeDown(false); break;
     case 'BracketRight': lab.panel.volumeUp(false); break;
     case 'keyP': _.paused = true; break;
+    case 'Escape': trap.echo('start')
     }
 }

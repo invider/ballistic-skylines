@@ -3,7 +3,7 @@ let METEOR_FQ = 0.3
 
 // star background
 module.exports =  {
-    Z: -1,
+    Z: -2,
 
     stars: [],
 

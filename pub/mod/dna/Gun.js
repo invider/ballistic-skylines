@@ -124,14 +124,21 @@ Gun.prototype.prev = function(dir) {
 Gun.prototype.evo = function(dt) {
     if (mv[1]) {
         // turn left
+        if (this.aim > MIN_AIM && res.sfx.turn.paused) {
+            lib.sfx(res.sfx.turn, 1)
+        }
         this.aim = lib.math.limitMin(
             lib.math.normalizeAngle(this.aim - TURN_SPEED * dt), MIN_AIM)
     }
     if (mv[2]) {
         // turn right
+        if (this.aim < MAX_AIM && res.sfx.turn.paused) {
+            lib.sfx(res.sfx.turn, 1)
+        }
         this.aim = lib.math.limitMax(
             lib.math.normalizeAngle(this.aim + TURN_SPEED * dt), MAX_AIM)
     }
+
     // charge the gun
     if (mv[3]) {
         this.charge= lib.math.limitMax(

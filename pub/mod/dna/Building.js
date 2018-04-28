@@ -100,9 +100,13 @@ Building.prototype.build = function(x) {
     if (this.floor === 1) lib.sfx(res.sfx.explosion[0], 0.7)
     else lib.sfx(res.sfx.explosion[1], 0.5)
 
+    // TODO make move to background as a collective of block of buildings
+    //      when cummulative average hight reaches some point
+    /*
     if (this.floor > 10) {
         this.Y = 1 + lib.math.rndi(7)
     }
+    */
 }
 
 Building.prototype.evo = function(dt) {

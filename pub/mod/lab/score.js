@@ -1,4 +1,3 @@
-
 let FQ = 1
 let surplus = 0
 let popTimer = 0

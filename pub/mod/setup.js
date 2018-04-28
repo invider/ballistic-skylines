@@ -49,5 +49,4 @@ module.exports = function() {
         style: 'target',
     })
     */
-    env.status = 'build'
 }

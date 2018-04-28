@@ -1,8 +1,8 @@
 {
     "dayLength": 30,
-    "gravity": 19,
+    "gravity": 27,
     "minCharge": 40,
-    "initialMaxCharge": 300,
+    "initialMaxCharge": 250,
     "initialRechargeSpeed": 150,
     "maxSectionShift": 0.2,
     "buildingMinPad": 128,
@@ -36,5 +36,5 @@
     "populationInitialGrowth": 10,
     "populationGrowthFactor": 0.07,
     "populationDecreseCapacity": 0.8,
-    "populationDecreseFactor": 0.02
+    "populationDecreseFactor": 0.005
 }

@@ -40,14 +40,12 @@ module.exports = {
         
         if (volumeControl < -VL) {
             if (env.sfxVolume > 0) {
-                log.out(env.sfxVolume)
                 env.sfxVolume = Math.max((env.sfxVolume*10 - 1)/10, 0)
                 showVolume()
             }
             volumeControl = 0
         } else if (volumeControl > VL) {
             if (env.sfxVolume < 1) {
-                log.out(env.sfxVolume)
                 env.sfxVolume = Math.min((env.sfxVolume*10 + 1)/10, 1)
                 showVolume()
             }
@@ -56,6 +54,10 @@ module.exports = {
     },
 
     draw: function() {
+
+        ctx.fillStyle = '#00002550'
+        ctx.fillRect(0, ctx.height-110, ctx.width, 110)
+
         let type = lab.gun.capsuleType.value()
         let msg = '' + type.label + ' [' + type.ore + ' ore]'
 
