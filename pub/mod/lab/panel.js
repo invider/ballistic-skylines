@@ -1,5 +1,60 @@
+function showVolume() {
+    sys.spawn('text/fadeText', {
+        font: '24px zekton',
+        fillStyle: '#f01020',
+        x: ctx.width * 0.6,
+        y: ctx.height * 0.3,
+        text: 'Volume: ' + Math.round(env.sfxVolume * 100) + '%',
+        dx: 50,
+        dy: -70,
+        ttl: 2,
+        tti: 0.3,
+        ttf: 1,
+    })
+    lib.sfx(res.sfx.powerup, 1)
+}
+
+let VL = 0.5
+let volumeControl = 0
+let volumeUp = false
+let volumeDown = false
+
 module.exports = {
     Z: 100,
+
+    init: function() {
+        env.sfxVolume = 0.7
+    },
+
+    volumeUp: function(val) {
+        volumeUp = val
+    },
+
+    volumeDown: function(val) {
+        volumeDown = val
+    },
+
+    evo: function(dt) {
+        if (volumeUp) volumeControl += dt
+        else if (volumeDown) volumeControl -= dt
+        
+        if (volumeControl < -VL) {
+            if (env.sfxVolume > 0) {
+                log.out(env.sfxVolume)
+                env.sfxVolume = Math.max((env.sfxVolume*10 - 1)/10, 0)
+                showVolume()
+            }
+            volumeControl = 0
+        } else if (volumeControl > VL) {
+            if (env.sfxVolume < 1) {
+                log.out(env.sfxVolume)
+                env.sfxVolume = Math.min((env.sfxVolume*10 + 1)/10, 1)
+                showVolume()
+            }
+            volumeControl = 0
+        }
+    },
+
     draw: function() {
         let type = lab.gun.capsuleType.value()
         let msg = '' + type.label + ' [' + type.ore + ' ore]'

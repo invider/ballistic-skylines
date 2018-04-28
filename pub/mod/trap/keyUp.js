@@ -4,24 +4,27 @@ module.exports = function(e) {
         return
     }
 
-    switch(e.key) {
-    case ' ': lab.gun.fire(); break;
-    case 'Shift': lab.gun.unhold(); break;
+    switch(e.code) {
+    case 'Space': lab.gun.fire(); break;
+    case 'ShiftRight':
+    case 'ShiftLeft':
+            lab.gun.unhold(); break;
     case 'ArrowLeft': lab.gun.stop(1); break;
     case 'ArrowRight': lab.gun.stop(2); break;
     case 'ArrowUp': lab.gun.prev(); break;
     case 'ArrowDown': lab.gun.next(); break;
 
-    case ',':
+    case 'Comma':
             lab.camControls.stop(lab.camControls.left);
             lab.camControls.center();
             break;
-    case '.':
+    case 'Period':
             lab.camControls.stop(lab.camControls.right);
             lab.camControls.center();
             break;
 
-    case 'p':
-    case 'P': _.paused = true; break;
+    case 'BracketLeft': lab.panel.volumeDown(false); break;
+    case 'BracketRight': lab.panel.volumeUp(false); break;
+    case 'keyP': _.paused = true; break;
     }
 }
