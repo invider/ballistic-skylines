@@ -29,6 +29,8 @@ module.exports = function() {
         y: -6,
     }, 'camera')
 
+    document.getElementById('canvas').style.cursor = 'none'
+
     /*
     // spawn world coordinate grid
     sys.spawn('Grid', {

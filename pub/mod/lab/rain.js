@@ -1,7 +1,9 @@
 
-let MAX_FQ = 150
-let RAIN_PERIOD = 60
-let timer = 30
+let MAX_FQ = 250
+let RAIN_PERIOD = 120
+let RAIN_CAP = 100 // the more is value, the less is raining
+let timer = 60
+let emit = 0
 
 module.exports = {
 
@@ -37,9 +39,15 @@ module.exports = {
         timer += dt
 
         // calculate rain intencity
-        this.DROP_FQ = Math.max(MAX_FQ * Math.sin((timer/RAIN_PERIOD)*Math.PI*2), 0)
+        this.DROP_FQ = Math.max((MAX_FQ+RAIN_CAP) * Math.sin(
+            (timer/RAIN_PERIOD)*Math.PI*2) - RAIN_CAP, 0)
 
-        if (lib.math.rndf() < this.DROP_FQ * dt) this.newDrop()
+        // generate drops
+        emit += this.DROP_FQ*dt
+        while (emit >= 1) {
+            this.newDrop()
+            emit--
+        }
 
         // make it rain
         this.drops.forEach( drop => {

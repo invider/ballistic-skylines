@@ -1,6 +1,10 @@
 
 let Z = 1000
 
+let Section = function(st) {
+    sys.augment(this, st)
+}
+
 let Building = function(st) {
     this.type = 2
     this.Z = Z++
@@ -14,11 +18,9 @@ let Building = function(st) {
     this.w = this.w || 64
     this.color = this.color || '#700090' 
     this.floor = 0
-    this.fh = 32
     this.section = []
-    this.shift = []
     this.hits = 0
-    this.buildingType = lib.math.rndi(4)
+    this.buildingType = lib.math.rndi(5)
 }
 
 Building.prototype.test = function(x) {
@@ -26,9 +28,10 @@ Building.prototype.test = function(x) {
 }
 
 Building.prototype.topSmoke = function() {
+    if (this.floor <= 0) return
     sys.spawn('Emitter', {
-            x: this.p.x - this.shift[this.floor-1],
-            y: this.p.y - this.floor * this.fh,
+            x: this.p.x - this.section[this.floor-1].dx,
+            y: this.p.y - this.floor * this.section[this.floor-1].h,
             img: res.dustParticle,
             lifespan: 0.5,
             force: 300,
@@ -77,20 +80,44 @@ Building.prototype.build = function(x) {
         let shift = this.p.x - x
         shift = lib.math.limitMax(shift, this.w * env.tuning.maxSectionShift)
         shift = lib.math.limitMin(shift, -this.w * env.tuning.maxSectionShift)
-        this.shift[this.floor] = shift
-        this.section[this.floor++] = 0 + lib.math.rndi(3)
+        this.section[this.floor++] = {
+            type: lib.math.rndi(3),
+            dx: shift,
+            w: 64,
+            h: 32,
+        }
         break;
     case 1:
-        this.shift[this.floor] = 0
-        this.section[this.floor++] = 3 + lib.math.rndi(4)
+        this.section[this.floor++] = {
+            type: 3 + lib.math.rndi(4),
+            dx: 0,
+            w: 64,
+            h: 32,
+        }
         break;
     case 2:
-        this.shift[this.floor] = 0
-        this.section[this.floor++] = 8 + lib.math.rndi(6)
+        this.section[this.floor++] = {
+            type: 8 + lib.math.rndi(6),
+            dx: 0,
+            w: 64,
+            h: 32,
+        }
         break;
     case 3:
-        this.shift[this.floor] = 0
-        this.section[this.floor++] = 15 + lib.math.rndi(4)
+        this.section[this.floor++] = {
+            type: 15 + lib.math.rndi(4),
+            dx: 0,
+            w: 64,
+            h: 32,
+        }
+        break;
+    case 4:
+        this.section[this.floor++] = {
+            type: 19 + lib.math.rndi(3),
+            dx: 0,
+            w: 64,
+            h: 32,
+        }
         break;
     }
 
@@ -118,25 +145,27 @@ Building.prototype.draw = function() {
 
     ctx.imageSmootingEnabled = false
 
-    let by = -this.fh
+    let by = -this.section[0].h
     for (let i = 0; i < this.floor; i++) {
-        let img = res.section[this.section[i]]
+        let img = res.section[this.section[i].type]
         if (!img) img = res.section[7]
-        ctx.drawImage(img, -this.w/2 - this.shift[i], by, this.w, this.fh)
+        ctx.drawImage(img, -this.w/2 - this.section[i].dx, by, this.section[i].w, this.section[i].h)
 
-        let alpha = '00'
-        switch (this.Y) {
-        case 1: alpha = '30'; break;
-        case 2: alpha = '40'; break;
-        case 3: alpha = '50'; break;
-        case 4: alpha = '60'; break;
-        case 5: alpha = '70'; break;
-        case 6: alpha = '80'; break;
-        case 7: alpha = 'A0'; break;
+        if (this.Y > 0) {
+            let alpha = '00'
+            switch (this.Y) {
+            case 1: alpha = '30'; break;
+            case 2: alpha = '40'; break;
+            case 3: alpha = '50'; break;
+            case 4: alpha = '60'; break;
+            case 5: alpha = '70'; break;
+            case 6: alpha = '80'; break;
+            case 7: alpha = 'A0'; break;
+            }
+            ctx.fillStyle = '#050010' + alpha
+            ctx.fillRect(-this.w/2 - this.section[i].dx, by, this.section[i].w, this.section[i].h)
         }
-        ctx.fillStyle = '#050010' + alpha
-        ctx.fillRect(-this.w/2 - this.shift[i], by, this.w, this.fh)
-        by -= this.fh
+        by -= this.section[i].h
     }
 
 	ctx.restore()
@@ -146,7 +175,6 @@ Building.prototype.demolish = function() {
     this.topSmoke()
     this.foundationSmoke()
 
-    this.shift.slice(1)
     this.section.slice(1)
     this.floor--
     if (this.floor === 0) {
