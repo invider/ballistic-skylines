@@ -465,7 +465,7 @@ LabFrame.prototype.onAttached = function(node) {
 
     if (isNumber(node.Z)) {
         // sort by Z
-        node.__._ls.sort((a, b) => {
+        this._ls.sort((a, b) => {
             if (!isNumber(a.Z) && !isNumber(b.Z)) return 0;
             if (!isNumber(a.Z) && isNumber(b.Z)) return 1;
             if (isNumber(a.Z) && !isNumber(b.Z)) return -1;

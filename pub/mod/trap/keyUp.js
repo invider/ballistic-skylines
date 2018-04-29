@@ -27,5 +27,13 @@ module.exports = function(e) {
     case 'BracketRight': lab.panel.volumeUp(false); break;
     case 'KeyP': _.paused = true; break;
     case 'Escape': trap.echo('start'); break;
+
+    case 'KeyR':
+        lab.rain.makeItRain()
+        break;
+
+    case 'KeyF':
+        lab.fog.makeItFog()
+        break;
     }
 }

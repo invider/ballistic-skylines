@@ -1,6 +1,6 @@
 let Scoop = function(st) {
     this.type = 3
-    this.Z = 1000
+    this.Z = env.Z++
 
     sys.augment(this, st)
 

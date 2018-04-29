@@ -1,6 +1,7 @@
 module.exports = function() {
     log.out('setting up the scene')
 
+    env.Z = 1000
     env.worldStart = -1500
     env.worldEnd = 1500
     sys.augment(env, env.tuning)
@@ -16,9 +17,19 @@ module.exports = function() {
 
     lab.landscape = sys.spawn('landscape', {}, 'camera')
 
+    lab.fog = sys.spawn('fog', {}, 'camera')
+
+    // fix the looping of rain sfx
+    res.sfx.rain.addEventListener('timeupdate', function(){
+        var buffer = 1.5
+        if(this.currentTime > this.duration - buffer){
+            this.currentTime = 0
+            this.play()
+        }
+    }, false)
+
     // spawn a gun under the camera
     lab.gun = sys.spawn('Gun', {
-        Z: 1000000,
         x: 0,
         y: -16,
     }, 'camera')

@@ -12,6 +12,7 @@ let TURN_SPEED = 2
 
 let Gun = function(st) {
     this.type = 1
+    this.Z = 1000000
     this.w = W
     this.h = H
     this.name = 'gun'

@@ -1,15 +1,11 @@
-
-let Z = 1000
-
 let Section = function(st) {
     sys.augment(this, st)
 }
 
 let Building = function(st) {
     this.type = 2
-    this.Z = Z++
+    this.Z = env.Z++
     this.Y = 0
-    env.maxBuildingZ = Z
 
     sys.augment(this, st)
 

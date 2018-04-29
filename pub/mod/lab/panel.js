@@ -72,5 +72,12 @@ module.exports = {
         ctx.textBaseline = 'bottom'
         ctx.font = '24px zekton'
         ctx.fillText(msg, ctx.width/2, ctx.height-20)
+
+        /*
+        // status line
+        ctx.textAlign = 'left'
+        ctx.textBaseline = 'bottom'
+        ctx.fillText(env.status, 0, ctx.height-20)
+        */
     }
 }

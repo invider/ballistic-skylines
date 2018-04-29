@@ -1,6 +1,6 @@
 let Rubbish = function(st) {
     this.type = 4
-    this.Z = env.maxBuildingZ + 1
+    this.Z = env.Z++
 
     sys.augment(this, st)
 

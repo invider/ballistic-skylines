@@ -1,17 +1,23 @@
 
 let MAX_FQ = 250
-let RAIN_PERIOD = 120
-let RAIN_CAP = 100 // the more is value, the less is raining
+let RAIN_PERIOD = 240
+let RAIN_CAP = 0.5
+let RAIN_VOLUME = 0.3
+
 let timer = 60
 let emit = 0
 
 module.exports = {
 
-    Z: 1000000,
+    Z: 1000,
 
     DROP_FQ: 0, 
 
     drops: [],
+
+    makeItRain: function() {
+        timer = 0
+    },
 
     newDrop: function() {
 
@@ -36,17 +42,25 @@ module.exports = {
     },
 
     evo: function(dt) {
+        if (env.noAtmosphericEffects) {
+            if (!res.sfx.rain.paused) res.sfx.rain.pause()
+            return
+        }
         timer += dt
 
         // calculate rain intencity
-        this.DROP_FQ = Math.max((MAX_FQ+RAIN_CAP) * Math.sin(
-            (timer/RAIN_PERIOD)*Math.PI*2) - RAIN_CAP, 0)
+        let rainFactor = Math.max(Math.cos((timer/RAIN_PERIOD)*Math.PI*2) - (1-RAIN_CAP), 0)/RAIN_CAP
+        this.DROP_FQ = rainFactor * MAX_FQ
 
         // generate drops
         emit += this.DROP_FQ*dt
         while (emit >= 1) {
             this.newDrop()
             emit--
+            if (res.sfx.rain.paused) {
+                //res.sfx.rain.loop = true
+                res.sfx.rain.play()
+            }
         }
 
         // make it rain
@@ -55,9 +69,13 @@ module.exports = {
             drop.y += drop.dy * dt
             if (drop.y > ctx.height) drop.a = false
         })
+
+        res.sfx.rain.volume = rainFactor * env.sfxVolume * RAIN_VOLUME
+        if (!res.sfx.rain.paused && rainFactor === 0) res.sfx.rain.pause()
     },
 
     draw: function() {
+        if (env.noAtmosphericEffects) return
         // draw drops
         this.drops.forEach( drop => {
             ctx.drawImage(res.drop, drop.x, drop.y, drop.w, drop.h)
