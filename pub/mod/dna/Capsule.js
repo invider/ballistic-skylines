@@ -1,6 +1,8 @@
 let Capsule = function(st) {
     sys.augment(this, st)
 
+    this.Z = env.Z++
+
     this.w = 15
     this.h = 15
 

@@ -1,9 +1,13 @@
+let BLINK = 2
+let MAX_LEVEL = 4
+
 let Section = function(st) {
     sys.augment(this, st)
 }
 
 let Building = function(st) {
     this.type = 2
+    this.timer = 0
     this.Z = env.Z++
     this.Y = 0
 
@@ -18,10 +22,17 @@ let Building = function(st) {
     this.root = null
     this.hits = 0
     this.buildingType = lib.math.rndi(5)
+    this.roofFloor = 5 + lib.math.rndi(5)
+    this.lightFloor = 7 + lib.math.rndi(5)
+    this.lightConfig = lib.math.rndi(5)
 }
 
 Building.prototype.test = function(x) {
     return (this.Y === 0 && x >= this.p.x - this.w/2 && x <= this.p.x + this.w/2)
+}
+
+Building.prototype.levelUp = function() {
+    if (this.Y < MAX_LEVEL) this.Y++
 }
 
 Building.prototype.topSmoke = function() {
@@ -117,13 +128,26 @@ Building.prototype.build = function(x) {
         }
         break;
     }
-    if (this.floor > 3) {
-        this.roof = {
-            t: lib.math.rndi(res.roof.length),
-            dx: 0,
-            w: 64,
-            h: 32,
+    if (!this.roof && this.floor > this.roofFloor) {
+        let t = -1
+        switch(this.buildingType) {
+            case 3:
+                t = lib.math.rndi(4)
+                break;
+            case 0: case 1:
+                t = 4 + lib.math.rndi(4)
+                break;
         }
+        if (t >= 0) {
+            this.roof = {
+                t: t,
+                dx: this.section[this.floor-1].dx,
+                w: 64,
+                h: 32,
+            }
+        }
+    } else if (this.roof) {
+        this.roof.dx = this.section[this.floor-1].dx
     }
 
     this.foundationSmoke()
@@ -142,6 +166,7 @@ Building.prototype.build = function(x) {
 }
 
 Building.prototype.evo = function(dt) {
+    this.timer += dt
 }
 
 Building.prototype.draw = function() {
@@ -152,13 +177,10 @@ Building.prototype.draw = function() {
     if (this.Y > 0) {
         let alpha = '00'
         switch (this.Y) {
-        case 1: alpha = '30'; break;
-        case 2: alpha = '40'; break;
-        case 3: alpha = '50'; break;
-        case 4: alpha = '60'; break;
-        case 5: alpha = '70'; break;
-        case 6: alpha = '80'; break;
-        case 7: alpha = 'A0'; break;
+        case 1: alpha = '50'; break;
+        case 2: alpha = '70'; break;
+        case 3: alpha = '90'; break;
+        case 4: alpha = 'B0'; break;
         }
         ctx.fillStyle = '#050010' + alpha
     }
@@ -176,6 +198,20 @@ Building.prototype.draw = function() {
     if (this.roof) {
         ctx.drawImage(res.roof[this.roof.t], -this.roof.w/2 - this.roof.dx, by, this.roof.w, this.roof.h)
         if (this.Y > 0) ctx.fillRect(-this.roof.w/2 - this.roof.dx, by, this.roof.w, this.roof.h)
+    }
+
+    by += this.section[this.floor-1].h
+    if (this.floor >= this.lightFloor && this.timer > BLINK) {
+        // blink
+        ctx.fillStyle = '#FF2020FF';
+        if (this.lightConfig <= 1) {
+            ctx.fillRect(-this.section[this.floor-1].w/2-2 - this.section[this.floor-1].dx, by, 4, 4)
+        }
+        if (this.lightConfig >= 1 && this.lightConfig < 3) {
+            ctx.fillRect(this.section[this.floor-1].w/2-2 - this.section[this.floor-1].dx, by, 4, 4)
+        }
+
+        if (this.timer > BLINK*2) this.timer = 0
     }
 
 	ctx.restore()

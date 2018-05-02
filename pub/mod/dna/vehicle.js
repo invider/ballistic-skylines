@@ -37,7 +37,7 @@ module.exports = function(st) {
 	}
 
 	return {
-		Z : Math.round(st.scale * env.maxBuildingZ) || 1000,
+		Z : 1000 + Math.round(st.scale * env.Z) || 1000,
 		evo : evos[lib.math.rndi(evos.length)](p),
 		draw : function() {
             let img = res.car[type]

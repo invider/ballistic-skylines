@@ -38,5 +38,11 @@ module.exports = function(e) {
         }
         break;
 
+    case 'KeyL':
+        if (!e.repeat && (e.ctrlKey || altKey)) {
+            trap('levelUp')
+        }
+        break;
+
     }
 }

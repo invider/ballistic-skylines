@@ -1,9 +1,9 @@
 {
     "dayLength": 30,
     "gravity": 30,
-    "minCharge": 75,
-    "initialMaxCharge": 350,
-    "initialRechargeSpeed": 200,
+    "minCharge": 70,
+    "initialMaxCharge": 400,
+    "initialRechargeSpeed": 300,
     "maxSectionShift": 0.2,
     "buildingMinPad": 128,
 

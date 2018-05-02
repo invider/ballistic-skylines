@@ -20,8 +20,10 @@ let FadeText = function(dat) {
     this.alive = true
     this.time = 0
 
-    this.textAlign ="left";
-    if (dat.textAlign) this.textAlign = dat.textAlign
+    this.align ="left"
+    this.base = "top"
+    if (dat.align) this.align = dat.align
+    if (dat.base) this.base = dat.base
 }
 
 FadeText.prototype.evo = function(dt) {
@@ -48,7 +50,8 @@ FadeText.prototype.draw = function() {
 
     ctx.font = this.font
     ctx.fillStyle = this.fillStyle
-    ctx.textAlign = this.textAlign
+    ctx.textAlign = this.align
+    ctx.textBaseline = this.base
 
     ctx.fillText(this.text, this.x, this.y)
     ctx.globalAlpha = 1
