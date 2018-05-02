@@ -15,6 +15,7 @@ let Building = function(st) {
     this.color = this.color || '#700090' 
     this.floor = 0
     this.section = []
+    this.root = null
     this.hits = 0
     this.buildingType = lib.math.rndi(5)
 }
@@ -116,6 +117,14 @@ Building.prototype.build = function(x) {
         }
         break;
     }
+    if (this.floor > 3) {
+        this.roof = {
+            t: lib.math.rndi(res.roof.length),
+            dx: 0,
+            w: 64,
+            h: 32,
+        }
+    }
 
     this.foundationSmoke()
     this.topSmoke()
@@ -140,28 +149,33 @@ Building.prototype.draw = function() {
 	ctx.translate(this.p.x, this.p.y)
 
     ctx.imageSmootingEnabled = false
+    if (this.Y > 0) {
+        let alpha = '00'
+        switch (this.Y) {
+        case 1: alpha = '30'; break;
+        case 2: alpha = '40'; break;
+        case 3: alpha = '50'; break;
+        case 4: alpha = '60'; break;
+        case 5: alpha = '70'; break;
+        case 6: alpha = '80'; break;
+        case 7: alpha = 'A0'; break;
+        }
+        ctx.fillStyle = '#050010' + alpha
+    }
 
     let by = -this.section[0].h
     for (let i = 0; i < this.floor; i++) {
         let img = res.section[this.section[i].type]
         if (!img) img = res.section[7]
-        ctx.drawImage(img, -this.w/2 - this.section[i].dx, by, this.section[i].w, this.section[i].h)
 
-        if (this.Y > 0) {
-            let alpha = '00'
-            switch (this.Y) {
-            case 1: alpha = '30'; break;
-            case 2: alpha = '40'; break;
-            case 3: alpha = '50'; break;
-            case 4: alpha = '60'; break;
-            case 5: alpha = '70'; break;
-            case 6: alpha = '80'; break;
-            case 7: alpha = 'A0'; break;
-            }
-            ctx.fillStyle = '#050010' + alpha
-            ctx.fillRect(-this.w/2 - this.section[i].dx, by, this.section[i].w, this.section[i].h)
-        }
+        ctx.drawImage(img, -this.section[i].w/2 - this.section[i].dx, by, this.section[i].w, this.section[i].h)
+        if (this.Y > 0) ctx.fillRect(-this.section[i].w/2 - this.section[i].dx, by, this.section[i].w, this.section[i].h)
+
         by -= this.section[i].h
+    }
+    if (this.roof) {
+        ctx.drawImage(res.roof[this.roof.t], -this.roof.w/2 - this.roof.dx, by, this.roof.w, this.roof.h)
+        if (this.Y > 0) ctx.fillRect(-this.roof.w/2 - this.roof.dx, by, this.roof.w, this.roof.h)
     }
 
 	ctx.restore()

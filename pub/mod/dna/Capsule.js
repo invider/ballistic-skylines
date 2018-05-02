@@ -86,7 +86,7 @@ Capsule.Type = [
             if (this.isOutOfScope()) return
             let ocupied = false
             lab.landscape.apply(x, env.scoopWidth + env.buildingMinPad, e => {
-                if (e.type > 0 && e.type < 10) ocupied = true
+                if (e.type > 0 && e.type < 4) ocupied = true
             })
             if (ocupied) {
                 this.explode()
@@ -107,7 +107,7 @@ Capsule.Type = [
 
             let ocupied = false
             lab.landscape.apply(x, env.buildingMinPad, e => {
-                if (e.type === 3 || e.type === 4) ocupied = true
+                if (e.type === 3) ocupied = true
             })
         
             if (ocupied) {

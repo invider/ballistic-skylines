@@ -9,10 +9,10 @@ module.exports = function(e) {
     case 'ShiftRight':
     case 'ShiftLeft':
             lab.gun.unhold(); break;
-    case 'ArrowLeft': lab.gun.stop(1); break;
-    case 'ArrowRight': lab.gun.stop(2); break;
+    case 'ArrowLeft': case 'KeyA': lab.gun.stop(1); break;
+    case 'ArrowRight': case 'KeyD': lab.gun.stop(2); break;
     case 'ArrowUp': lab.gun.prev(); break;
-    case 'ArrowDown': lab.gun.next(); break;
+    case 'ArrowDown': case 'KeyE': lab.gun.next(); break;
 
     case 'Comma':
             lab.camControls.stop(lab.camControls.left);
@@ -28,12 +28,5 @@ module.exports = function(e) {
     case 'KeyP': _.paused = true; break;
     case 'Escape': trap.echo('start'); break;
 
-    case 'KeyR':
-        lab.rain.makeItRain()
-        break;
-
-    case 'KeyF':
-        lab.fog.makeItFog()
-        break;
     }
 }
