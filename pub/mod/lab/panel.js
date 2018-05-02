@@ -34,6 +34,27 @@ module.exports = {
         volumeDown = val
     },
 
+    switchSky: function() {
+        env.clearSky = !env.clearSky
+
+        let meteorRain  = 'ON'
+        if (env.clearSky) meteorRain = 'OFF'
+
+        sys.spawn('text/fadeText', {
+            font: '24px zekton',
+            fillStyle: '#f0f040',
+            x: ctx.width * 0.6,
+            y: ctx.height * 0.3,
+            text: 'Meteor Rain: ' + meteorRain,
+            dx: 50,
+            dy: -70,
+            ttl: 2,
+            tti: 0.3,
+            ttf: 1,
+        })
+        lib.sfx(res.sfx.powerup, 1)
+    },
+
     evo: function(dt) {
         if (volumeUp) volumeControl += dt
         else if (volumeDown) volumeControl -= dt

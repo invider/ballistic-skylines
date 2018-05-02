@@ -26,6 +26,12 @@ module.exports = function(e) {
         }
         break;
 
+    case 'Backspace':
+        if (!e.repeat) {
+            lab.panel.switchSky()
+        }
+        break;
+
     case 'Digit8':
         if (!e.repeat) {
             lib.img.screenshot('skyline')

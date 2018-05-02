@@ -39,6 +39,7 @@ Meteor.prototype.ground = function() {
             if (this.scale > 0.5) {
                 setTimeout(function() {
                     e.demolish()
+                    lib.sfx(res.sfx.aftershock, 0.6)
                 }, 2000)
             }
             sys.spawn('text/fadeText', {
