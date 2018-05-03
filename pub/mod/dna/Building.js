@@ -6,16 +6,55 @@ let Section = function(st) {
 }
 
 let Banner = function(st) {
-    this.text = 'luka'
+    this.visible = true
+    this.timer = 0
+    this.timer2 = 0
+    this.glowTime = 10 + lib.math.rndi(10)
+    this.flickTime = 1
+    this.margin = 4
+    this.font = '14px zekton'
+
     sys.augment(this, st)
+
+    ctx.font = this.font
+    this.tw = ctx.measureText(this.text).width
+    this.w = this.tw + this.margin*2
+    this.h = 9 + this.margin*2
 }
 
 Banner.prototype.evo = function(dt) {
     // flick
+    this.timer += dt
+    if (this.timer < this.glowTime) this.visible = true
+    else {
+        this.timer2 += dt
+        if (this.timer2 > 0.05) {
+            this.timer2 = 0
+            this.visible = !this.visible
+        }
+        if (this.timer > this.glowTime + this.flickTime) {
+            this.glowTime = 10 + lib.math.rndi(10)
+            this.flickTimer = 0.2 + lib.math.rndi(10)/10
+            this.timer = 0
+        }
+    }
 }
 
 Banner.prototype.draw = function() {
+    if (!this.visible) return
     // text + frame
+    ctx.globalAlpha = 1
+    ctx.strokeStyle = '#ff0000ff'
+    ctx.fillStyle = '#ff0000ff'
+
+    ctx.lineWidth = 1
+    ctx.strokeRect(this.x-this.w/2, this.y-this.h/2, this.w, this.h)
+
+    ctx.font = this.font
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+
+    ctx.fillText(this.text, this.x, this.y)
 }
 
 let Building = function(st) {
@@ -32,12 +71,20 @@ let Building = function(st) {
     this.color = this.color || '#700090' 
     this.floor = 0
     this.section = []
+    this.banner = []
     this.root = null
     this.hits = 0
     this.buildingType = lib.math.rndi(5)
     this.roofFloor = 5 + lib.math.rndi(5)
     this.lightFloor = 7 + lib.math.rndi(5)
     this.lightConfig = lib.math.rndi(5)
+
+    let dict = "道路標識区画線及び道路標示に関する命令"
+    this.banner.push(new Banner({
+        x: -20 + lib.math.rndi(40),
+        y: -lib.math.rndi(40),
+        text: dict.substring(lib.math.rndi(dict.length-6), 3+lib.math.rndi(3))
+    }))
 }
 
 Building.prototype.test = function(x) {
@@ -180,6 +227,7 @@ Building.prototype.build = function(x) {
 
 Building.prototype.evo = function(dt) {
     this.timer += dt
+    this.banner.forEach(b => b.evo(dt))
 }
 
 Building.prototype.draw = function() {
@@ -228,6 +276,8 @@ Building.prototype.draw = function() {
 
         if (this.timer > BLINK*2) this.timer = 0
     }
+
+    this.banner.forEach(b => b.draw())
 
 	ctx.restore()
 }
