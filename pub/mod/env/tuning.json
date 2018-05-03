@@ -6,6 +6,7 @@
     "initialRechargeSpeed": 300,
     "maxSectionShift": 0.2,
     "buildingMinPad": 128,
+    "switchTime": 0.5,
 
     "scoopWidth": 256,
     "scoopHits": 5,

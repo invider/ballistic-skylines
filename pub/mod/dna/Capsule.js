@@ -83,7 +83,7 @@ Capsule.Type = [
 	{
         ore: 50,
         pre: 's',
-        label: 'Scoop',
+        label: 'Meteor Scoop',
 		ground: function(x) {
             if (this.isOutOfScope()) return
             let ocupied = false

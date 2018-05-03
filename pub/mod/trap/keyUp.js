@@ -11,8 +11,8 @@ module.exports = function(e) {
             lab.gun.unhold(); break;
     case 'ArrowLeft': case 'KeyA': lab.gun.stop(1); break;
     case 'ArrowRight': case 'KeyD': lab.gun.stop(2); break;
-    case 'ArrowUp': lab.gun.prev(); break;
-    case 'ArrowDown': case 'KeyE': lab.gun.next(); break;
+    case 'ArrowUp': lab.gun.prev(false); break;
+    case 'ArrowDown': case 'KeyE': lab.gun.next(false); break;
 
     case 'Comma':
             lab.camControls.stop(lab.camControls.left);

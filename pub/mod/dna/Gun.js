@@ -1,4 +1,7 @@
 let mv = []
+let next = false
+let prev = false
+let timer = [0, 0]
 
 let W = 64
 let H = 32
@@ -114,15 +117,33 @@ Gun.prototype.stop = function(dir) {
     mv[dir] = false
 }
 
-Gun.prototype.next = function(dir) {
-	this.capsuleType.next()
+Gun.prototype.next = function(st) {
+    if (st && !next) timer[0] = env.switchTime
+    next = st
+    if (!st) timer[0] = 0
 }
 
-Gun.prototype.prev = function(dir) {
-	this.capsuleType.prev()
+Gun.prototype.prev = function(st) {
+    if (st && !prev) timer[1] = env.switchTime
+    prev = st
+    if (!st) timer[1] = 0
 }
 
 Gun.prototype.evo = function(dt) {
+    if (next) {
+        timer[0] += dt
+        if (timer[0] > env.switchTime) {
+            timer[0] = 0
+            this.capsuleType.next()
+        }
+    } else if (prev) {
+        timer[1] += dt
+        if (timer[1] > env.switchTime) {
+            timer[1] = 0
+            this.capsuleType.prev()
+        }
+    }
+
     if (mv[1]) {
         // turn left
         if (this.aim > MIN_AIM && res.sfx.turn.paused) {

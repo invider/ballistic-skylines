@@ -8,6 +8,8 @@ module.exports = function(e) {
             lab.gun.holdToLast(); break;
     case 'ArrowLeft': case 'KeyA': lab.gun.move(1); break;
     case 'ArrowRight': case 'KeyD': lab.gun.move(2); break;
+    case 'ArrowUp': lab.gun.prev(true); break;
+    case 'ArrowDown': case 'KeyE': lab.gun.next(true); break;
     case 'Comma': lab.camControls.move(lab.camControls.left); break;
     case 'Period': lab.camControls.move(lab.camControls.right); break;
 

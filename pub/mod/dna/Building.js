@@ -5,6 +5,19 @@ let Section = function(st) {
     sys.augment(this, st)
 }
 
+let Banner = function(st) {
+    this.text = 'luka'
+    sys.augment(this, st)
+}
+
+Banner.prototype.evo = function(dt) {
+    // flick
+}
+
+Banner.prototype.draw = function() {
+    // text + frame
+}
+
 let Building = function(st) {
     this.type = 2
     this.timer = 0
@@ -174,13 +187,15 @@ Building.prototype.draw = function() {
 	ctx.translate(this.p.x, this.p.y)
 
     ctx.imageSmootingEnabled = false
+
+    let a = 1
     if (this.Y > 0) {
         let alpha = '00'
         switch (this.Y) {
-        case 1: alpha = '50'; break;
-        case 2: alpha = '70'; break;
-        case 3: alpha = '90'; break;
-        case 4: alpha = 'B0'; break;
+        case 1: alpha = '50'; a = 0.7; break;
+        case 2: alpha = '70'; a = 0.5; break;
+        case 3: alpha = '90'; a = 0.3; break;
+        case 4: alpha = 'B0'; a = 0.1; break;
         }
         ctx.fillStyle = '#050010' + alpha
     }
@@ -196,8 +211,8 @@ Building.prototype.draw = function() {
         by -= this.section[i].h
     }
     if (this.roof) {
+        ctx.globalAlpha = a
         ctx.drawImage(res.roof[this.roof.t], -this.roof.w/2 - this.roof.dx, by, this.roof.w, this.roof.h)
-        if (this.Y > 0) ctx.fillRect(-this.roof.w/2 - this.roof.dx, by, this.roof.w, this.roof.h)
     }
 
     by += this.section[this.floor-1].h
