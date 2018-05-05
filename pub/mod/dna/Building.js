@@ -79,12 +79,6 @@ let Building = function(st) {
     this.lightFloor = 7 + lib.math.rndi(5)
     this.lightConfig = lib.math.rndi(5)
 
-    let dict = "道路標識区画線及び道路標示に関する命令"
-    this.banner.push(new Banner({
-        x: -20 + lib.math.rndi(40),
-        y: -lib.math.rndi(40),
-        text: dict.substring(lib.math.rndi(dict.length-6), 3+lib.math.rndi(3))
-    }))
 }
 
 Building.prototype.test = function(x) {
@@ -209,6 +203,14 @@ Building.prototype.build = function(x) {
     } else if (this.roof) {
         this.roof.dx = this.section[this.floor-1].dx
     }
+
+    let dict = "道路標識区画線及び道路標示に関する命令"
+    let di = lib.math.rndi(dict.length-6)
+    this.banner.push(new Banner({
+        x: -20 + lib.math.rndi(40),
+        y: -this.floor*32 - lib.math.rndi(20),
+        text: dict.substring(di, di + 3 + lib.math.rndi(3)),
+    }))
 
     this.foundationSmoke()
     this.topSmoke()
