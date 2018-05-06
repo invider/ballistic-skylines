@@ -548,9 +548,15 @@ var Mod = function(initObj) {
                             _.patch(script.base, script.path, script.src)
                         } else if (script.ext === 'lines') {
                             let lines = script.src.match(/[^\r\n]+/g)
-                            lines = lines.map(l => l.trim())
-                            lines = lines.filter(l => l.length > 0
-                                    && !l.startsWith('--'))
+                            lines = lines.map(l => {
+                                let ci = l.indexOf('--')
+                                if (ci >= 0) {
+                                    return l.substring(0, ci-1).trim()
+                                } else {
+                                    return l.trim()
+                                }
+                            })
+                            lines = lines.filter(l => l.length > 0)
                             _.patch(script.base, script.path, lines)
                         } else if (script.ext === 'csv') {
                             let lines = script.src.match(/[^\r\n]+/g);
