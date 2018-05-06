@@ -1,28 +1,51 @@
 let BLINK = 2
 let MAX_LEVEL = 4
+let NEON_SPACING = 32
+let FLOOR_HEIGHT = 32
 
 let Section = function(st) {
     sys.augment(this, st)
 }
 
 let Banner = function(st) {
+    this.dead = false
     this.visible = true
+    this.vertical = false
     this.timer = 0
     this.timer2 = 0
     this.glowTime = 10 + lib.math.rndi(10)
     this.flickTime = 1
-    this.margin = 4
-    this.font = '14px zekton'
+    this.margin = 2
+    this.textSize = 12
+
+    // determine color
+    let c = '#FFBBEE'
+    switch(lib.math.rndi(4)) {
+    case 1: c = '#FF0000'; break;
+    case 2: c = '#20EFFF'; break;
+    case 3: c = '#59E6FF'; break;
+    }
+    this.color = c
 
     sys.augment(this, st)
 
+    this.font = this.textSize + 'px zekton'
     ctx.font = this.font
     this.tw = ctx.measureText(this.text).width
-    this.w = this.tw + this.margin*2
-    this.h = 9 + this.margin*2
+    this.lw = Math.ceil(this.tw/this.text.length)
+
+    if (this.vertical) {
+        this.w = this.lw + this.margin*2
+        this.h = this.text.length * (this.textSize + this.margin)
+                    + this.margin*2
+    } else {
+        this.w = this.tw + this.margin*2
+        this.h = this.textSize + this.margin*2
+    }
 }
 
 Banner.prototype.evo = function(dt) {
+    if (this.dead) return
     // flick
     this.timer += dt
     if (this.timer < this.glowTime) this.visible = true
@@ -33,20 +56,19 @@ Banner.prototype.evo = function(dt) {
             this.visible = !this.visible
         }
         if (this.timer > this.glowTime + this.flickTime) {
-            this.glowTime = 10 + lib.math.rndi(10)
-            this.flickTimer = 0.2 + lib.math.rndi(10)/10
+            this.glowTime = 30 + lib.math.rndi(60)
+            this.flickTime = 0.1 + lib.math.rndi(9)/9
             this.timer = 0
         }
     }
 }
 
 Banner.prototype.draw = function() {
-    if (!this.visible) return
-    // text + frame
-    ctx.globalAlpha = 1
-    ctx.strokeStyle = '#ff0000ff'
-    ctx.fillStyle = '#ff0000ff'
+    if (this.dead || !this.visible) return
 
+    ctx.globalAlpha = 1
+    ctx.strokeStyle = this.color
+    ctx.fillStyle = this.color
     ctx.lineWidth = 1
     ctx.strokeRect(this.x-this.w/2, this.y-this.h/2, this.w, this.h)
 
@@ -54,7 +76,15 @@ Banner.prototype.draw = function() {
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
 
-    ctx.fillText(this.text, this.x, this.y)
+    if (this.vertical) {
+        let by = this.y - this.h/2 + this.textSize/2 + this.margin
+        for (let i = 0; i < this.text.length; i++) {
+            ctx.fillText(this.text.charAt(i), this.x, by)
+            by += this.textSize + this.margin
+        }
+    } else {
+        ctx.fillText(this.text, this.x, this.y)
+    }
 }
 
 let Building = function(st) {
@@ -78,11 +108,14 @@ let Building = function(st) {
     this.roofFloor = 5 + lib.math.rndi(5)
     this.lightFloor = 7 + lib.math.rndi(5)
     this.lightConfig = lib.math.rndi(5)
-
 }
 
 Building.prototype.test = function(x) {
     return (this.Y === 0 && x >= this.p.x - this.w/2 && x <= this.p.x + this.w/2)
+}
+
+Building.prototype.bannerCount = function() {
+    return this.banner.length
 }
 
 Building.prototype.levelUp = function() {
@@ -135,6 +168,70 @@ Building.prototype.foundationSmoke = function() {
     }, 'camera')
 }
 
+Building.prototype.neon = function() {
+    let text = res.banner[lib.math.rndi(res.banner.length)]
+    let margin = 2
+
+    let textSize = 8
+    switch(lib.math.rndi(6)) {
+        case 1: textSize = 9; break;
+        case 2: textSize = 10; break;
+        case 3: textSize = 11; break;
+        case 4: textSize = 12; break;
+        case 5: textSize = 13; break;
+    }
+    let vertical = !!lib.math.rndi(2)
+
+    // claculate banner parameters
+    let font = textSize + 'px zekton'
+    ctx.font = font
+    let tw = ctx.measureText(text).width
+    let lw = Math.ceil(tw/text.length)
+
+    let h = textSize + margin*4
+    let y = -16 - lib.math.rndi(this.floor*FLOOR_HEIGHT)
+    if (vertical) {
+        h = text.length * (textSize + margin) + margin*4
+        y = -lib.math.rndi(this.floor*FLOOR_HEIGHT-h/2)
+        if (y > -h/2) y = -h/2
+    }
+
+    let w = tw + margin*4
+    let x = -20 + lib.math.rndi(40)
+    if (vertical) {
+        w = lw + margin*4
+        x = this.w/2 + 5
+        if (lib.math.rndi(2) > 0) x *= -1
+    }
+
+    // find out if the spot is free
+    let occupied = false
+    this.banner.forEach(b => {
+        if (b.x+b.w/2 >= x-w/2
+                && b.x-b.w/2 <= x+w/2
+                && b.y+b.h/2 >= y-h/2
+                && b.y-b.h/2 <= y+h/2) {
+            occupied = true
+        }
+    })
+    if (occupied) return
+
+    // create and place the banner
+    let nb = new Banner({
+        x: x,
+        y: y,
+        vertical: vertical,
+        text: text,
+        textSize: textSize,
+    })
+
+    // find the optimal slot for new banner
+    let bi = -1
+    this.banner.forEach((b, i) => { if (b.dead) bi = i; })
+    if (bi >= 0) this.banner[bi] = nb
+    else this.banner.push(nb)
+}
+
 Building.prototype.build = function(x) {
     // building type selection
     switch(this.buildingType) {
@@ -146,7 +243,7 @@ Building.prototype.build = function(x) {
             type: lib.math.rndi(3),
             dx: shift,
             w: 64,
-            h: 32,
+            h: FLOOR_HEIGHT,
         }
         break;
     case 1:
@@ -154,7 +251,7 @@ Building.prototype.build = function(x) {
             type: 3 + lib.math.rndi(4),
             dx: 0,
             w: 64,
-            h: 32,
+            h: FLOOR_HEIGHT,
         }
         break;
     case 2:
@@ -162,7 +259,7 @@ Building.prototype.build = function(x) {
             type: 8 + lib.math.rndi(6),
             dx: 0,
             w: 64,
-            h: 32,
+            h: FLOOR_HEIGHT,
         }
         break;
     case 3:
@@ -170,7 +267,7 @@ Building.prototype.build = function(x) {
             type: 15 + lib.math.rndi(4),
             dx: 0,
             w: 64,
-            h: 32,
+            h: FLOOR_HEIGHT,
         }
         break;
     case 4:
@@ -178,7 +275,7 @@ Building.prototype.build = function(x) {
             type: 19 + lib.math.rndi(3),
             dx: 0,
             w: 64,
-            h: 32,
+            h: FLOOR_HEIGHT,
         }
         break;
     }
@@ -197,20 +294,12 @@ Building.prototype.build = function(x) {
                 t: t,
                 dx: this.section[this.floor-1].dx,
                 w: 64,
-                h: 32,
+                h: FLOOR_HEIGHT,
             }
         }
     } else if (this.roof) {
         this.roof.dx = this.section[this.floor-1].dx
     }
-
-    let dict = "道路標識区画線及び道路標示に関する命令"
-    let di = lib.math.rndi(dict.length-6)
-    this.banner.push(new Banner({
-        x: -20 + lib.math.rndi(40),
-        y: -this.floor*32 - lib.math.rndi(20),
-        text: dict.substring(di, di + 3 + lib.math.rndi(3)),
-    }))
 
     this.foundationSmoke()
     this.topSmoke()
@@ -293,6 +382,10 @@ Building.prototype.demolish = function() {
     if (this.floor === 0) {
         this.__.detach(this)
     }
+    // normalize banners
+    this.banner.forEach(b => {
+        if (b.y < -this.floor*FLOOR_HEIGHT-20) b.dead = true
+    })
     this.topSmoke()
 }
 

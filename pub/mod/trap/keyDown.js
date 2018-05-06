@@ -1,3 +1,5 @@
+let shots = 0
+
 module.exports = function(e) {
     if (_.paused) return
 
@@ -36,7 +38,7 @@ module.exports = function(e) {
 
     case 'Digit8':
         if (!e.repeat) {
-            lib.img.screenshot('skyline')
+            lib.img.screenshot('skyline-' + (++shots))
         }
         break;
         

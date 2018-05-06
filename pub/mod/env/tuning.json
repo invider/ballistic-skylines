@@ -34,8 +34,10 @@
 	},
 
     "sectionCapacity": 250,
+    "neonForPopulation": 20,
     "populationInitialGrowth": 10,
     "populationGrowthFactor": 0.07,
     "populationDecreseCapacity": 0.8,
-    "populationDecreseFactor": 0.005
+    "populationDecreseFactor": 0.005,
+    "nextLevelPopulation": 50000
 }

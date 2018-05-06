@@ -546,6 +546,12 @@ var Mod = function(initObj) {
                             if (val) _.patch(script.base, script.path, val)
                         } else if (script.ext === 'txt') {
                             _.patch(script.base, script.path, script.src)
+                        } else if (script.ext === 'lines') {
+                            let lines = script.src.match(/[^\r\n]+/g)
+                            lines = lines.map(l => l.trim())
+                            lines = lines.filter(l => l.length > 0
+                                    && !l.startsWith('--'))
+                            _.patch(script.base, script.path, lines)
                         } else if (script.ext === 'csv') {
                             let lines = script.src.match(/[^\r\n]+/g);
                             // naming array
@@ -1170,7 +1176,7 @@ Mod.prototype.batchLoad = function(batch, context, src, base, path, ext) {
 
     } else if (ext === 'yaml') {
         // TODO how to load that? only AJAX?
-    } else if (ext === 'txt' || ext === 'prop') {
+    } else if (ext === 'txt' || ext === 'prop' || ext === 'lines') {
         _.log.sys('loader-' + batch, 'text ' + target)
         
         _.res._included ++

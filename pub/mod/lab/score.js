@@ -12,6 +12,8 @@ module.exports = {
         env.population = 0
         env.ore = 100
         env.oreIncome = 0
+        env.level = 0
+        env.levelPop = 0
     },
 
     addOre: function(n) {
@@ -27,6 +29,47 @@ module.exports = {
                 env.oreIncome --
                 lib.sfx(res.sfx.pickup, 0.3)
             }
+        }
+    },
+
+    handleLevel: function() {
+        if (env.population > env.levelPop + env.nextLevelPopulation) {
+            // next level
+            env.level ++
+            env.levelPop += env.nextLevelPopulation
+            trap('levelUp')
+        }
+    },
+
+    spawnNeon: function(max) {
+        let first = 0
+        let target = 0
+        let marker = lib.math.rndi(max+1)
+
+        lab.camera._ls.forEach( (e, i) => {
+            if (e.type === 2) {
+                if (first === 0) first = i
+                if (target === 0 && i > marker) target = i
+            }
+        })
+        if (target === 0) target = first
+        if (target === 0) return
+
+        lab.camera._ls[target].neon()
+    },
+
+    handleNeon: function() {
+        let max = 0
+        let banners = 0
+        lab.camera._ls.forEach( (e, i) => {
+            if (e.type === 2) {
+                max = i
+                banners += e.bannerCount()
+            }
+        })
+
+        if (banners < Math.floor(env.population/env.neonForPopulation)) {
+            this.spawnNeon(max)
         }
     },
 
@@ -59,6 +102,9 @@ module.exports = {
                 surplus = 0
             }
         }
+
+        this.handleNeon()
+        this.handleLevel()
     },
 
     evo: function(dt) {
