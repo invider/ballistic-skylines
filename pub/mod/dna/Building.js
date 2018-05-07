@@ -7,84 +7,140 @@ let Section = function(st) {
     sys.augment(this, st)
 }
 
+let SearchLight = function() {
+    this.visible = true
+    this.h = 2000
+    this.minAngle = Math.PI * 0.8
+    this.maxAngle = Math.PI * 1.2
+    this.angle = this.minAngle + (this.maxAngle - this.minAngle)/2
+    this.dir = 0.05 + lib.math.rndi(20)/100
+    this.dir *= lib.math.rnds()
+    this.wa = 0.1
+
+    this.show = 20 * lib.math.rnds()
+    this.delay = 0
+}
+
+SearchLight.prototype.evo = function(dt) {
+    if (this.visible) {
+        this.show -= dt
+            if (this.show < 0) this.visible = false
+
+                // move
+                this.angle += this.dir * dt
+                    if (this.angle > this.maxAngle) {
+                        this.angle = this.maxAngle
+                            this.dir *= -1
+                    }
+        if (this.angle < this.minAngle) {
+            this.angle = this.minAngle
+                this.dir *= -1
+        }
+    } else {
+        this.delay -= dt
+            if (this.delay < 0) {
+                this.show = 10 + lib.math.rndi(60)
+                this.delay = 10 + lib.math.rndi(60)
+                this.visible = true
+            }
+    }
+}
+
+SearchLight.prototype.draw = function() {
+    if (!this.visible) return
+        //ctx.save()
+        //ctx.translate(0, -40)
+
+        ctx.fillStyle = '#FFFFFF03'
+
+            ctx.beginPath()
+            ctx.moveTo(0, 0)
+            ctx.lineTo(Math.sin(this.angle)*this.h, Math.cos(this.angle)*this.h)
+            ctx.lineTo(Math.sin(this.angle+this.wa)*this.h, Math.cos(this.angle+this.wa)*this.h)
+            ctx.closePath()
+            ctx.fill()
+
+            //ctx.restore()
+}
+
 let Banner = function(st) {
     this.dead = false
-    this.visible = true
-    this.vertical = false
-    this.timer = 0
-    this.timer2 = 0
-    this.glowTime = 10 + lib.math.rndi(10)
-    this.flickTime = 1
-    this.margin = 2
-    this.textSize = 12
+        this.visible = true
+        this.vertical = false
+        this.timer = 0
+        this.timer2 = 0
+        this.glowTime = 10 + lib.math.rndi(10)
+        this.flickTime = 1
+        this.margin = 2
+        this.textSize = 12
 
-    // determine color
-    let c = '#FFBBEE'
-    switch(lib.math.rndi(4)) {
-    case 1: c = '#FF0000'; break;
-    case 2: c = '#20EFFF'; break;
-    case 3: c = '#59E6FF'; break;
-    }
+        // determine color
+        let c = '#FFBBEE'
+        switch(lib.math.rndi(4)) {
+            case 1: c = '#FF0000'; break;
+            case 2: c = '#20EFFF'; break;
+            case 3: c = '#59E6FF'; break;
+        }
     this.color = c
 
-    sys.augment(this, st)
+        sys.augment(this, st)
 
-    this.font = this.textSize + 'px zekton'
-    ctx.font = this.font
-    this.tw = ctx.measureText(this.text).width
-    this.lw = Math.ceil(this.tw/this.text.length)
+        this.font = this.textSize + 'px zekton'
+        ctx.font = this.font
+        this.tw = ctx.measureText(this.text).width
+        this.lw = Math.ceil(this.tw/this.text.length)
 
-    if (this.vertical) {
-        this.w = this.lw + this.margin*2
-        this.h = this.text.length * (this.textSize + this.margin)
-                    + this.margin*2
-    } else {
-        this.w = this.tw + this.margin*2
-        this.h = this.textSize + this.margin*2
-    }
+        if (this.vertical) {
+            this.w = this.lw + this.margin*2
+                this.h = this.text.length * (this.textSize + this.margin)
+                + this.margin*2
+        } else {
+            this.w = this.tw + this.margin*2
+                this.h = this.textSize + this.margin*2
+        }
 }
 
 Banner.prototype.evo = function(dt) {
     if (this.dead) return
-    // flick
-    this.timer += dt
-    if (this.timer < this.glowTime) this.visible = true
-    else {
-        this.timer2 += dt
-        if (this.timer2 > 0.05) {
-            this.timer2 = 0
-            this.visible = !this.visible
-        }
-        if (this.timer > this.glowTime + this.flickTime) {
-            this.glowTime = 30 + lib.math.rndi(60)
-            this.flickTime = 0.1 + lib.math.rndi(9)/9
-            this.timer = 0
-        }
-    }
+        // flick
+        this.timer += dt
+            if (this.timer < this.glowTime) this.visible = true
+            else {
+                this.timer2 += dt
+                    if (this.timer2 > 0.05) {
+                        this.timer2 = 0
+                            this.visible = !this.visible
+                    }
+                if (this.timer > this.glowTime + this.flickTime) {
+                    this.glowTime = 30 + lib.math.rndi(60)
+                        this.flickTime = 0.1 + lib.math.rndi(9)/9
+                        this.timer = 0
+                }
+            }
 }
 
 Banner.prototype.draw = function() {
     if (this.dead || !this.visible) return
 
-    ctx.globalAlpha = 1
-    ctx.strokeStyle = this.color
-    ctx.fillStyle = this.color
-    ctx.lineWidth = 1
-    ctx.strokeRect(this.x-this.w/2, this.y-this.h/2, this.w, this.h)
+        ctx.globalAlpha = 1
+            ctx.strokeStyle = this.color
+            ctx.fillStyle = this.color
+            ctx.lineWidth = 1
+            ctx.strokeRect(this.x-this.w/2, this.y-this.h/2, this.w, this.h)
 
-    ctx.font = this.font
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
+            ctx.font = this.font
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
 
-    if (this.vertical) {
-        let by = this.y - this.h/2 + this.textSize/2 + this.margin
-        for (let i = 0; i < this.text.length; i++) {
-            ctx.fillText(this.text.charAt(i), this.x, by)
-            by += this.textSize + this.margin
-        }
-    } else {
-        ctx.fillText(this.text, this.x, this.y)
-    }
+            if (this.vertical) {
+                let by = this.y - this.h/2 + this.textSize/2 + this.margin
+                    for (let i = 0; i < this.text.length; i++) {
+                        ctx.fillText(this.text.charAt(i), this.x, by)
+                            by += this.textSize + this.margin
+                    }
+            } else {
+                ctx.fillText(this.text, this.x, this.y)
+            }
 }
 
 let Building = function(st) {
@@ -108,6 +164,12 @@ let Building = function(st) {
     this.roofFloor = 5 + lib.math.rndi(5)
     this.lightFloor = 7 + lib.math.rndi(5)
     this.lightConfig = lib.math.rndi(5)
+
+    if (lib.math.rndf() < env.searchLightFactor) {
+        this.searchLight = new SearchLight()
+    } else {
+        this.searchLight = false
+    }
 }
 
 Building.prototype.test = function(x) {
@@ -172,13 +234,12 @@ Building.prototype.neon = function() {
     let text = res.banner[lib.math.rndi(res.banner.length)]
     let margin = 2
 
-    let textSize = 8
-    switch(lib.math.rndi(6)) {
-        case 1: textSize = 9; break;
-        case 2: textSize = 10; break;
-        case 3: textSize = 11; break;
-        case 4: textSize = 12; break;
-        case 5: textSize = 13; break;
+    let textSize = 10
+    switch(lib.math.rndi(5)) {
+        case 1: textSize = 11; break;
+        case 2: textSize = 12; break;
+        case 3: textSize = 13; break;
+        case 4: textSize = 14; break;
     }
     let vertical = !!lib.math.rndi(2)
 
@@ -319,6 +380,7 @@ Building.prototype.build = function(x) {
 Building.prototype.evo = function(dt) {
     this.timer += dt
     this.banner.forEach(b => b.evo(dt))
+    if (this.searchLight) this.searchLight.evo(dt)
 }
 
 Building.prototype.draw = function() {
@@ -326,6 +388,8 @@ Building.prototype.draw = function() {
 	ctx.translate(this.p.x, this.p.y)
 
     ctx.imageSmootingEnabled = false
+
+    if (this.searchLight) this.searchLight.draw()
 
     let a = 1
     if (this.Y > 0) {

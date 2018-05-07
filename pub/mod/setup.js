@@ -2,8 +2,8 @@ module.exports = function() {
     log.out('setting up the scene')
 
     env.Z = 1000
-    env.worldStart = -1500
-    env.worldEnd = 1500
+    env.worldStart = -1700
+    env.worldEnd = 1700
     sys.augment(env, env.tuning)
 
     // spawn camera
@@ -39,6 +39,8 @@ module.exports = function() {
         x: -300,
         y: -6,
     }, 'camera')
+
+    env.ore = env.initialOre
 
     document.getElementById('canvas').style.cursor = 'none'
 

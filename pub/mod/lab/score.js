@@ -10,7 +10,7 @@ module.exports = {
     init: function() {
         env.timer = 0
         env.population = 0
-        env.ore = 100
+        env.ore = 0
         env.oreIncome = 0
         env.level = 0
         env.levelPop = 0
